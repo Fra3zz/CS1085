@@ -1,0 +1,53 @@
+/*
+ 
+Write a java program with the following requirements:
+
+declare an integer array with 20 values example: {1,20,15,5,1,6,9,10,1,8,7,3,2,1,4,13,1,17,18,19} 
+
+print out the original array
+
+sort the array from smallest to largest. If there are any repeating numbers, you must purge that
+
+number from the sorted array making sure it only appears once in the array, so the above array should 
+
+result in: {1,2,3,4,5,6,7,8,9,10,13,15,17,18,19,20} 
+
+print out the newly sorted array
+
+You must comment all of your code and must be ready to explain its workings on 
+demand in order to receive any credit. I will change the source array to any 
+combination of positive integers I choose, and your code must work.  Y
+ou must submit a valid java file.  Your code must only have two outputs, 
+the original array and the sorted array, if the sorted array is smaller 
+than the original array, you must only print out valid data and no null data.
+
+This is worth 10 points extra credit on ANY EXAM.
+
+ */
+public class EC2 {
+
+    public static void main(String[] args) {
+
+        boolean DEBUG = true;
+        
+        int[] mainArry = {1, 20, 15, 5, 1, 6, 9, 10, 1, 8, 7, 3, 2, 1, 4, 13, 1, 17, 18, 19};
+        int[] newArry = new int[mainArry.length];
+        int i;
+        int count = 0;
+        int buffer;
+
+        for (i = 0; i < mainArry.length; i++){
+
+            if(DEBUG){
+                //Print out index and number associated with index.
+                System.out.printf("Index %s; Num: %s\n", i, mainArry[i]);
+                count++;
+
+                //Print count from 0 for each iteration (identifies total number of numbers in array.)
+                System.out.printf("Count: %s\n", count);
+            }
+        }
+
+
+    }
+}
