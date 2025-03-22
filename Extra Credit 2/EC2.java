@@ -50,6 +50,7 @@ public class EC2 {
         for (i = 0; i < mainArry.length; i++){
 
             if(DEBUG){
+                count++;
                 //Print out index and number associated with index.
                 System.out.printf("DEBUG Index %s; Num: %s\n", i, mainArry[i]);
 
@@ -63,11 +64,16 @@ public class EC2 {
                 mainArry[i+1] = buffer;
 
                 if(DEBUG){
-                    System.out.printf("DEBUG %s is greater than %s.\n", mainArry[i], mainArry[i+1]);
+                    System.out.printf("DEBUG %s is greater than %s\n", mainArry[i], mainArry[i+1]);
                 }
 
                 
+            } else{
+                if (DEBUG) {
+                    System.out.printf("DEBUG %s is not greater than %s\n", mainArry[i], mainArry[i+1]);
+                }
             }
+            
 
         }
     }
