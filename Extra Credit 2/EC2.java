@@ -60,6 +60,8 @@ public class EC2 {
         }
         System.out.print("\n");
 
+
+
         //Iterate mainArry
         for (iteration = 0; iteration < mainArry.length - 1; iteration++){
 
@@ -100,11 +102,11 @@ public class EC2 {
 
         //DEBUG prints resulting array and array length
         if(DEBUG){
-            System.out.printf("Resulting Array: ");
+            System.out.printf("DEBUG Resulting Array: ");
             for (i = 0; i < mainArry.length; i++){
                 System.out.printf("%s ", mainArry[i]);
             }
-            System.out.printf("\nArray length: %s", mainArry.length);
+            System.out.printf("\nDEBUG Array length: %s", mainArry.length);
         }
     }
 }
