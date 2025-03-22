@@ -24,30 +24,51 @@ than the original array, you must only print out valid data and no null data.
 This is worth 10 points extra credit on ANY EXAM.
 
  */
+
+
 public class EC2 {
 
     public static void main(String[] args) {
 
         boolean DEBUG = true;
         
-        int[] mainArry = {1, 20, 15, 5, 1, 6, 9, 10, 1, 8, 7, 3, 2, 1, 4, 13, 1, 17, 18, 19};
+        int[] mainArry = {1,20,15,5,1,6,9,10,1,8,7,3,2,1,4,13,1,17,18,19} ;
         int[] newArry = new int[mainArry.length];
         int i;
         int count = 0;
         int buffer;
 
+
+        System.out.print("Numbers: ");
+        for (i=0; i<mainArry.length; i++){
+            //Iterate and print original array.
+            System.out.printf("%s ", mainArry[i]);
+        }
+        System.out.print("\n");
+
+        //Iterate through mainArry
         for (i = 0; i < mainArry.length; i++){
 
             if(DEBUG){
                 //Print out index and number associated with index.
-                System.out.printf("Index %s; Num: %s\n", i, mainArry[i]);
-                count++;
+                System.out.printf("DEBUG Index %s; Num: %s\n", i, mainArry[i]);
 
                 //Print count from 0 for each iteration (identifies total number of numbers in array.)
-                System.out.printf("Count: %s\n", count);
+                System.out.printf("DEBUG Count: %s\n", count);
             }
+
+            if(mainArry[i] > mainArry[i + 1]){
+                buffer = mainArry[i];
+                mainArry[i] = mainArry[i+1];
+                mainArry[i+1] = buffer;
+
+                if(DEBUG){
+                    System.out.printf("DEBUG %s is greater than %s.\n", mainArry[i], mainArry[i+1]);
+                }
+
+                
+            }
+
         }
-
-
     }
 }
