@@ -16,8 +16,8 @@ print out the newly sorted array
 
 You must comment all of your code and must be ready to explain its workings on 
 demand in order to receive any credit. I will change the source array to any 
-combination of positive integers I choose, and your code must work.  Y
-ou must submit a valid java file.  Your code must only have two outputs, 
+combination of positive integers I choose, and your code must work.  
+You must submit a valid java file.  Your code must only have two outputs, 
 the original array and the sorted array, if the sorted array is smaller 
 than the original array, you must only print out valid data and no null data.
 
@@ -30,6 +30,7 @@ public class EC2 {
 
     public static void main(String[] args) {
 
+        //Variables
         boolean DEBUG = true;
         
         int[] mainArry = {1,20,15,5,1,6,9,10,1,8,7,3,2,1,4,13,1,17,18,19} ;
@@ -40,13 +41,14 @@ public class EC2 {
 
 
         System.out.print("Numbers: ");
+
+        //Iterate and print original array.
         for (i=0; i<mainArry.length; i++){
-            //Iterate and print original array.
             System.out.printf("%s ", mainArry[i]);
         }
         System.out.print("\n");
 
-        //Iterate through mainArry
+        //Iterate mainArry
         for (i = 0; i < mainArry.length - 1; i++){
 
             if(DEBUG){
@@ -76,6 +78,15 @@ public class EC2 {
             }
 
 
+        }
+
+        //DEBUG prints resulting array and array length
+        if(DEBUG){
+            System.out.printf("Resulting Array: ");
+            for (i = 0; i < mainArry.length; i++){
+                System.out.printf("%s ", mainArry[i]);
+            }
+            System.out.printf("\nArray length: %s", mainArry.length);
         }
     }
 }
