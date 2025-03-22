@@ -45,7 +45,7 @@ public class EC2 {
         boolean DEBUG = true;
         
         int[] mainArry = {1,20,15,5,1,6,9,10,1,8,7,3,2,1,4,13,1,17,18,19} ;
-        int[] newArry = new int[mainArry.length];
+        int[] finalArry;
         int i;
         int count = 1;
         int buffer;
@@ -59,8 +59,6 @@ public class EC2 {
             System.out.printf("%s ", mainArry[i]);
         }
         System.out.print("\n");
-
-
 
         //Iterate mainArry
         for (iteration = 0; iteration < mainArry.length - 1; iteration++){
@@ -106,7 +104,22 @@ public class EC2 {
             for (i = 0; i < mainArry.length; i++){
                 System.out.printf("%s ", mainArry[i]);
             }
-            System.out.printf("\nDEBUG Array length: %s", mainArry.length);
+            System.out.printf("\nDEBUG Array length: %s\n", mainArry.length);
         }
+
+        //Iterated through mainArry, replacing duplicates with -1
+        for (i=0; i < mainArry.length - 1; i++){
+            if(mainArry[i] == mainArry[i+1]){
+                if(DEBUG){
+                    System.out.printf("DEBUG %s is a duplicate number and has been replaced with -1\n", mainArry[i]);
+                }
+                mainArry[i] = -1;
+            }
+        }
+
+        System.out.print("DEBUG Numbers after duplicate replacment: ");
+            for (i=0; i<mainArry.length; i++){
+                System.out.printf("%s ", mainArry[i]);
+            }
     }
 }
