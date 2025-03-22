@@ -25,6 +25,17 @@ This is worth 10 points extra credit on ANY EXAM.
 
  */
 
+/*
+-------------------------------------------------------------------
+ DATA:
+
+ 1.0.0 - aa69ac78452d1666914be9222f6ea619ae6cccda
+ Iterations until sorted: 362
+
+
+ -------------------------------------------------------------------
+ */
+
 
 public class EC2 {
 
