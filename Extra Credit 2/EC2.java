@@ -38,6 +38,7 @@ public class EC2 {
         int i;
         int count = 1;
         int buffer;
+        int iteration;
 
 
         System.out.print("Numbers: ");
@@ -49,32 +50,38 @@ public class EC2 {
         System.out.print("\n");
 
         //Iterate mainArry
-        for (i = 0; i < mainArry.length - 1; i++){
+        for (iteration = 0; iteration < mainArry.length - 1; iteration++){
 
-            if(DEBUG){
-                count++;
-                //Print out index and number associated with index.
-                System.out.printf("DEBUG Index %s; Num: %s\n", i, mainArry[i]);
-
-                //Print count from 0 for each iteration (identifies total number of numbers in array.)
-                System.out.printf("DEBUG Count: %s\n", count);
-            }
-
-            //Switches the index values if next index is larger.
-            if(mainArry[i] > mainArry[i + 1]){
-                buffer = mainArry[i];
-                mainArry[i] = mainArry[i+1];
-                mainArry[i+1] = buffer;
+            //For each iteration, organize the array one time.
+            for (i = 0; i < mainArry.length - 1; i++){
 
                 if(DEBUG){
-                    System.out.printf("DEBUG %s is greater than %s\n", mainArry[i], mainArry[i+1]);
+                    count++;
+                    //Print out index and number associated with index.
+                    System.out.printf("DEBUG Index %s; Num: %s\n", i, mainArry[i]);
+    
+                    //Print count from 0 for each iteration (identifies total number of numbers in array.)
+                    System.out.printf("DEBUG Count: %s\n", count);
                 }
+    
+                //Switches the index values if next index is larger.
+                if(mainArry[i] > mainArry[i + 1]){
+                    buffer = mainArry[i];
+                    mainArry[i] = mainArry[i+1];
+                    mainArry[i+1] = buffer;
+    
+                    if(DEBUG){
+                        System.out.printf("DEBUG %s is greater than %s\n", mainArry[i], mainArry[i+1]);
+                    }
+    
+                    
+                } else{
+                    if (DEBUG) {
+                        System.out.printf("DEBUG %s is not greater than %s\n", mainArry[i], mainArry[i+1]);
+                    }
+                }
+    
 
-                
-            } else{
-                if (DEBUG) {
-                    System.out.printf("DEBUG %s is not greater than %s\n", mainArry[i], mainArry[i+1]);
-                }
             }
 
 
