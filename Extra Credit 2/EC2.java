@@ -35,7 +35,7 @@ public class EC2 {
         int[] mainArry = {1,20,15,5,1,6,9,10,1,8,7,3,2,1,4,13,1,17,18,19} ;
         int[] newArry = new int[mainArry.length];
         int i;
-        int count = 0;
+        int count = 1;
         int buffer;
 
 
@@ -47,7 +47,7 @@ public class EC2 {
         System.out.print("\n");
 
         //Iterate through mainArry
-        for (i = 0; i < mainArry.length; i++){
+        for (i = 0; i < mainArry.length - 1; i++){
 
             if(DEBUG){
                 count++;
@@ -58,6 +58,7 @@ public class EC2 {
                 System.out.printf("DEBUG Count: %s\n", count);
             }
 
+            //Switches the index values if next index is larger.
             if(mainArry[i] > mainArry[i + 1]){
                 buffer = mainArry[i];
                 mainArry[i] = mainArry[i+1];
@@ -73,7 +74,7 @@ public class EC2 {
                     System.out.printf("DEBUG %s is not greater than %s\n", mainArry[i], mainArry[i+1]);
                 }
             }
-            
+
 
         }
     }
