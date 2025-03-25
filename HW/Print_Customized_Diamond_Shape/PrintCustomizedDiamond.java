@@ -1,5 +1,4 @@
 package ProgrammingForComputerScientist_1.HW.Print_Customized_Diamond_Shape;
-import java.util.Scanner;
 
 
 /*
@@ -42,6 +41,8 @@ public class PrintCustomizedDiamond {
       System.out.println("Enter a size (even number no less than 6): ");
       userNum = scnr.nextInt();
     }
+
+    scnr.close();
 
     //Prints first half of the trinagle.
     i = userNum / 2;
