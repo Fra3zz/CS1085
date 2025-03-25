@@ -1,4 +1,3 @@
-package ProgrammingForComputerScientist_1.HW.Print_Customized_Diamond_Shape;
 
 
 /*
@@ -38,9 +37,10 @@ public class PrintCustomizedDiamond {
     int userNum = 1;
 
     while (userNum < 6 || userNum % 2 != 0) {
-      System.out.println("Enter a size (even number no less than 6): ");
+      System.out.print("Enter a size (even number no less than 6): ");
       userNum = scnr.nextInt();
     }
+    System.out.println("");
 
     scnr.close();
 
@@ -51,7 +51,7 @@ public class PrintCustomizedDiamond {
 
 
       //Adds spacing.
-      r = userNum; //3
+      r = userNum - 1; //3
       while (r > i) {
         System.out.print(" ");
         r--;
@@ -72,7 +72,6 @@ public class PrintCustomizedDiamond {
     while(i > 0){
 
       //Adds spacing.
-      System.out.print(" ");
       r = userNum/2;
       while (r > i) {
         System.out.print(" ");
