@@ -26,7 +26,7 @@ import java.util.Scanner;
 
 import java.util.Scanner;
 
-public class DiamondShape {
+public class PrintCustomizedDiamond {
     public static void main(String[] args) {
     
     int i;
