@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class game {
 
-    //Registration and i/o
+    //Writes a single line string input to file input. 
     public static void writeLineToFile(String content, String filePath){
          try(PrintWriter writer = new PrintWriter(new File(filePath))){
 
@@ -27,6 +27,7 @@ public class game {
 
 
 
+
     public static void main(String[] args) {
 
     //-----------CONSTANTS------------
@@ -39,7 +40,7 @@ public class game {
 
     
     //-----------LOGIC------------
-    
+
         
     }
 }
