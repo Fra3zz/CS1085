@@ -21,8 +21,14 @@ public class game {
     public static String diceRoll() {
         Random rand = new Random();
         //int arry[] = {rand.nextInt(6) + 1, rand.nextInt(6) + 1};
-        return("" + rand.nextInt(6 + 1) + rand.nextInt(6 + 1));
+        return("" + (rand.nextInt(6) + 1) + (rand.nextInt(6) + 1));
     }
+
+    // public static int numFromDice() {
+    //     String numString = diceRoll();
+
+    //     return 0;
+    // }
 
 
 
@@ -40,7 +46,6 @@ public class game {
 
     
     //-----------LOGIC------------
-
         
     }
 }
