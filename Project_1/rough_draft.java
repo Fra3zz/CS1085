@@ -9,10 +9,10 @@ import java.io.FileReader;
 class rough_draft{
 
     //Generates two random numbers and returns a int array representing dice1 throw and dice2 throw.
-    public static int[] diceRoll() {
+    public static String diceRoll() {
         Random rand = new Random();
-        int arry[] = {rand.nextInt(6) + 1, rand.nextInt(6) + 1};
-        return arry;
+        //int arry[] = {rand.nextInt(6) + 1, rand.nextInt(6) + 1};
+        return("" + rand.nextInt(6 + 1) + rand.nextInt(6 + 1));
     }
 
     public static void main(String[] args) {
