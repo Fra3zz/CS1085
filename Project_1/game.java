@@ -1,4 +1,7 @@
 import java.util.Random;
+
+import javax.management.RuntimeErrorException;
+
 import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -105,6 +108,16 @@ public class game {
         }
     }
 
+    private static byte[] SHA_256(String data){
+        try{
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return digest.digest(data.getBytes());
+        } catch(NoSuchAlgorithmException e){
+            throw new RuntimeException("ERROR: " + e);
+
+        }
+    }
+
     /**
      * Returns string of base64 encoded hash of the string input.
      * @author Fra3zz
@@ -113,22 +126,14 @@ public class game {
      * @param 
      * @throws NoSuchAlgorithmException
      */
-    public static String SHA_256_B64(String data, boolean DEBUG){
+    public static String SHA_256_B64(String message, boolean DEBUG){
         String data_encoded;
 
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            data_encoded = Base64.getEncoder().encodeToString(digest.digest(data.getBytes()));
-
+            data_encoded = Base64.getEncoder().encodeToString(SHA_256(message));
             if(DEBUG){
                 System.out.printf("DEBUG Message base64: %s\n", data_encoded);
             }
             return data_encoded;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-
-        return "ERROR";
     }
 
     public static void registerUser(String username, String email, boolean DEBUG){
