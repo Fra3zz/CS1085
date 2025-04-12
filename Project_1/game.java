@@ -147,7 +147,7 @@ public class game {
      * @return String
      * @param 
      */
-    public static String findUser(String username, String email, String file, boolean DEBUG){
+    public static String userAuth(String username, String email, String file, boolean DEBUG){
         //0 - Error; 1 - User validated; 2 - User info invalid; 3 - User not found
 
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -158,19 +158,17 @@ public class game {
                     System.out.printf("DEBUG %s\n", line); //DEBUG only output
                 }
 
-                String[] user = line.split("[|]");
-
-
-
-                if(user[0].equals(SHA_256_B64(email, DEBUG))){
+                if(line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG))){
 
                     if(DEBUG){
-                        System.out.printf("DEBUG Email found: %s as %s\n", email, user[0]);
+                        System.out.println("DEBUG Email found");
                     }
-                    if(user[1].equals(SHA_256_B64(username, DEBUG))){
+                    if(line.split("[|]")[1].equals(SHA_256_B64(username, DEBUG))){
+
+                        String[] user = line.split("[|]");
 
                         if(DEBUG){
-                            System.out.printf("DEBUG Username found for %s as %s.\nDEBUG Bankroll: %s\n", username, user[0], user[2]);
+                            System.out.printf("DEBUG User authenticated.\nDEBUG Bankroll: %s\n",user[2]);
                         }
                         return "1" + "|" + user[2]; //User found and bankroll amount and status returned.
                     }
@@ -229,6 +227,28 @@ public class game {
         return(number);
     }
 
+
+    public static boolean isUserRegisterd(String email, String file, boolean DEBUG){
+        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while((line = reader.readLine()) != null){
+
+                if(DEBUG){
+                    System.out.printf("DEBUG %s\n", line); //DEBUG only output
+                }
+
+                if(line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG))){
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } catch (IOException e){
+            System.err.printf("\nERROR: %s",e);
+        }
+
+    
+    return false;}
     public static void main(String[] args) {
 
     //-----------CONSTANTS------------
@@ -242,8 +262,16 @@ public class game {
     
     //-----------METHOD CALLS------------
 
-    //addUser("Fra3zz", "j@j.com", SAVEPATH, DEBUG, 100);
-    String thing = findUser("Fra3zz", "j@j.com", SAVEPATH, DEBUG);
+    //addUser("Fra3zz12345", "j@j.com", SAVEPATH, DEBUG, 100);
+    //String thing = findUser("Fra3zz", "j@j.com", SAVEPATH, DEBUG);
+    //System.out.println(thing);
+    if(isUserRegisterd("j@j.com", SAVEPATH, DEBUG)){
+        System.out.println("USER FOUND");
+    } else{
+        System.out.println("USER NOT FOUND");
+    }
+
+    String thing = userAuth("Fra3zz", "j@j.com", SAVEPATH, DEBUG);
     System.out.println(thing);
     }
 }
