@@ -220,14 +220,20 @@ public class game {
      */
     public static String diceRoll(boolean DEBUG) {
         Random rand = new Random();
-        String number = "" + (rand.nextInt(6) + 1) + (rand.nextInt(6) + 1);
+        String number = "" + (rand.nextInt(6) + 1) + "|" + (rand.nextInt(6) + 1);
         if(DEBUG){
-            System.out.printf("DEBUG NUmber generated is %s.",number);
+            System.out.printf("DEBUG Number generated is %s.",number);
         }
         return(number);
     }
 
-
+    /**
+     * Checks if a user is registerd by comparing email hashes. Quick method for checking is a user is already registerd. 
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return boolean
+     * @param 
+     */
     public static boolean isUserRegisterd(String email, String file, boolean DEBUG){
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -249,6 +255,46 @@ public class game {
 
     
     return false;}
+    
+    /**
+     * Converts the diceRoll result to ints and returns an int sum.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return int
+     * @param 
+     */
+    public static int scoreDice(String diceRoll, boolean DEBUG) {
+
+         String[] roll = diceRoll.split("[|]");
+        return Integer.parseInt(roll[0]) + Integer.parseInt(roll[1]);
+}
+    
+    
+    
+    /*
+        The Come-out Roll aka “the first roll” of the two six-sided dice:
+
+        If the sum of the numbers on the dice is either 7 or 11; the player wins and 
+            the game is over.
+
+        If the sum of the numbers on the dice is either 2, 3 or 12; 
+            the player loses, and the game is over. (aka crap out) 
+
+        If the sum of the numbers on the dice is any other number, that number 
+            becomes the point, and the game continues 
+
+        Follow-up rolls, aka “rolling the point”: 
+
+        If the initial roll results in a point, the player will continue to roll the dice and 
+            every time they roll the same point.
+
+        If the player rolls any other number that is not “the point” or “7”, the game 
+            continues to the next roll
+
+        If the player rolls a “7”, the game is over. (aka 7 out)
+         */
+    
+    
     public static void main(String[] args) {
 
     //-----------CONSTANTS------------
@@ -261,17 +307,5 @@ public class game {
 
     
     //-----------METHOD CALLS------------
-
-    //addUser("Fra3zz12345", "j@j.com", SAVEPATH, DEBUG, 100);
-    //String thing = findUser("Fra3zz", "j@j.com", SAVEPATH, DEBUG);
-    //System.out.println(thing);
-    if(isUserRegisterd("j@j.com", SAVEPATH, DEBUG)){
-        System.out.println("USER FOUND");
-    } else{
-        System.out.println("USER NOT FOUND");
-    }
-
-    String thing = userAuth("Fra3zz", "j@j.com", SAVEPATH, DEBUG);
-    System.out.println(thing);
     }
 }
