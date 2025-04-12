@@ -1,6 +1,7 @@
 import java.util.Random;
 
 import javax.management.RuntimeErrorException;
+import javax.print.DocFlavor.STRING;
 
 import java.io.PrintWriter;
 import java.security.MessageDigest;
@@ -8,9 +9,12 @@ import java.security.NoSuchAlgorithmException;
 import java.io.File;
 import java.io.IOException;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.Base64;
+import java.util.List;
 
 public class game {
 
@@ -293,7 +297,84 @@ public class game {
 
         If the player rolls a “7”, the game is over. (aka 7 out)
          */
-    
+
+    public static void editBankRoll(String file, String email, int bankRollAmount, boolean DEBUG) {
+        List<String> lines = new ArrayList<>();
+        boolean lineReplaced = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                if (DEBUG) {
+                    System.out.printf("DEBUG %s\n", line); // DEBUG only output
+                }
+
+                if (line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG))) {
+                    String[] user = line.split("[|]");
+                    String payload = user[0] + "|" + user[1] + "|" + bankRollAmount;
+                    lines.add(payload);
+                    lineReplaced = true;
+
+                    if (DEBUG) {
+                        System.out.printf("DEBUG Line will be replaced with '%s'.\n", payload);
+                    }
+                } else {
+                    lines.add(line);
+                }
+            }
+        } catch (IOException e) {
+            System.err.printf("\nERROR: %s", e);
+            return;
+        }
+
+        if (lineReplaced) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+                for (String l : lines) {
+                    writer.write(l);
+                    writer.newLine();
+                }
+                if (DEBUG) {
+                    System.out.printf("DEBUG File '%s' has been updated.\n", file);
+                }
+            } catch (IOException e) {
+                System.err.printf("ERROR: %s", e.getMessage());
+            }
+        } else if (DEBUG) {
+            System.out.printf("DEBUG No matching line found for email '%s'.\n", email);
+        }
+    }
+
+    public static void banker(String userBankroll, int multiplier, boolean DEBUG){
+        int bankroll = Integer.parseInt(userBankroll.split("[|]")[1]);
+    }
+
+    /**
+     * Evaluates the "first roll" from the dice roll sum input. Reduces and increases bankroll based upon win/lose criteria.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return String
+     * @param 
+     */
+    public static String evaluateDice(int diceScore, int bet, boolean DEBUG){
+        if(diceScore == 7 || diceScore == 11){
+            if (DEBUG) {
+                System.out.printf("DEBUG User won first roll. Bet %s added to bankroll\n", bet);
+            }
+            return "GOOD_END"; //Game ends with bet added to bankroll.
+        } else if(diceScore == 2 || diceScore == 3 || diceScore == 12){
+            if (DEBUG) {
+                System.out.printf("DEBUG User lost first roll, %s deducted from bankroll\n", bet);
+            }
+            return "BAD_END"; //Game ends with bet lost.
+        } else {
+            if (DEBUG) {
+                System.out.println("DEBUG User is on point");
+            }
+            return "???"; //Player keeps pushing their luck.
+        }
+    }
+
+
     
     public static void main(String[] args) {
 
@@ -307,5 +388,7 @@ public class game {
 
     
     //-----------METHOD CALLS------------
+    //addUser("john doe12", "bob12@bob.com", SAVEPATH, DEBUG, 100);
+    editBankRoll(SAVEPATH, "bob@bob.com", 100000, DEBUG);
     }
 }
