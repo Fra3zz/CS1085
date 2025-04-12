@@ -1,10 +1,12 @@
 import java.util.Random;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.io.File;
 import java.io.IOException;
-import java.util.Scanner;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Base64;
 
 public class game {
 
@@ -20,7 +22,7 @@ public class game {
          try(PrintWriter writer = new PrintWriter(new File(filePath))){
             writer.println(content);
             if(DEBUG){
-                System.out.printf("DEBUG: Line was writen to file '%s' with content '%s'.", filePath, content);
+                System.out.printf("DEBUG Line was writen to file '%s' with content '%s'.", filePath, content);
             }
         } catch(IOException e) {
             System.err.printf("ERROR: %s", e.getMessage());
@@ -41,7 +43,7 @@ public class game {
             while((line = reader.readLine()) != null){
 
                 if(DEBUG){
-                    System.out.printf("DEBUG: %s\n", line); //DEBUG only output
+                    System.out.printf("DEBUG %s\n", line); //DEBUG only output
                 }
             }
         } catch (IOException e){
@@ -81,26 +83,52 @@ public class game {
             if(first_email_fragments.length == 2 && !first_email_fragments[0].isBlank() && !first_email_fragments[1].isBlank()){
                 if(first_email_fragments[0].startsWith(".") || first_email_fragments[0].endsWith(".") || first_email_fragments[1].startsWith(".") || first_email_fragments[0].endsWith(".")){
                     if(DEBUG){
-                        System.out.printf("DEBUG: First part of email: '%s'\nDEBUG: Second part of email: '%s'\n", first_email_fragments[0], first_email_fragments[1]);
-                        System.out.printf("DEBUG: Full email: '%s@%s'\n", first_email_fragments[0], first_email_fragments[1]);
+                        System.out.printf("DEBUG First part of email: '%s'\nDEBUG Second part of email: '%s'\n", first_email_fragments[0], first_email_fragments[1]);
+                        System.out.printf("DEBUG Full email: '%s@%s'\n", first_email_fragments[0], first_email_fragments[1]);
                     }
                     return false;
                 }
                 if(DEBUG){
-                    System.out.printf("DEBUG: First part of email: '%s'\nDEBUG: Second part of email: '%s'\n", first_email_fragments[0], first_email_fragments[1]);
-                    System.out.printf("DEBUG: Full email: '%s@%s'\n", first_email_fragments[0], first_email_fragments[1]);
+                    System.out.printf("DEBUG First part of email: '%s'\nDEBUG Second part of email: '%s'\n", first_email_fragments[0], first_email_fragments[1]);
+                    System.out.printf("DEBUG Full email: '%s@%s'\n", first_email_fragments[0], first_email_fragments[1]);
                 }
                 return true;
             } else{
                 if(DEBUG){
-                    System.out.printf("DEBUG: First part of email: '%s'\nDEBUG: Second part of email: '%s'\n", first_email_fragments[0], first_email_fragments[1]);
-                    System.out.printf("DEBUG: Full email: '%s@%s'\n", first_email_fragments[0], first_email_fragments[1]);
+                    System.out.printf("DEBUG First part of email: '%s'\nDEBUG Second part of email: '%s'\n", first_email_fragments[0], first_email_fragments[1]);
+                    System.out.printf("DEBUG Full email: '%s@%s'\n", first_email_fragments[0], first_email_fragments[1]);
                 }
                 return false;
             }
         } else {
             return false;
         }
+    }
+
+    /**
+     * Returns string of base64 encoded hash of the string input.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return String
+     * @param 
+     * @throws NoSuchAlgorithmException
+     */
+    public static String SHA_256_B64(String data, boolean DEBUG){
+        String data_encoded;
+
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            data_encoded = Base64.getEncoder().encodeToString(digest.digest(data.getBytes()));
+
+            if(DEBUG){
+                System.out.printf("DEBUG Message base64: %s\n", data_encoded);
+            }
+            return data_encoded;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
+        return "ERROR";
     }
 
     public static void registerUser(String username, String email, boolean DEBUG){
@@ -118,7 +146,7 @@ public class game {
         Random rand = new Random();
         String number = "" + (rand.nextInt(6) + 1) + (rand.nextInt(6) + 1);
         if(DEBUG){
-            System.out.printf("DEBUG: NUmber generated is %s.",number);
+            System.out.printf("DEBUG NUmber generated is %s.",number);
         }
         return(number);
     }
