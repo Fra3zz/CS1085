@@ -298,6 +298,13 @@ public class game {
         If the player rolls a “7”, the game is over. (aka 7 out)
          */
 
+    /**
+     * Edites the bankroll of designated users account.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     */
     public static void editBankRoll(String file, String email, int bankRollAmount, boolean DEBUG) {
         List<String> lines = new ArrayList<>();
         boolean lineReplaced = false;
