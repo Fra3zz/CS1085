@@ -108,6 +108,14 @@ public class game {
         }
     }
 
+    /**
+     * Makes SHA_256 hash of the message input, returning a byte array.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return byte array
+     * @param 
+     * @throws NoSuchAlgorithmException
+     */
     private static byte[] SHA_256(String data){
         try{
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -124,7 +132,6 @@ public class game {
      * @version 1.0.0
      * @return String
      * @param 
-     * @throws NoSuchAlgorithmException
      */
     public static String SHA_256_B64(String message, boolean DEBUG){
         String data_encoded;
