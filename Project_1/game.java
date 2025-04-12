@@ -24,7 +24,7 @@ public class game {
      */
     public static void writeLineToFile(String content, String filePath, boolean DEBUG){
          try(FileWriter writer = new FileWriter(new File(filePath), true)){
-            writer.write("\n" + content);
+            writer.write(content + '\n');
             if(DEBUG){
                 System.out.printf("DEBUG Line was writen to file '%s' with content '%s'.", filePath, content);
             }
@@ -54,10 +54,6 @@ public class game {
             System.err.printf("\nERROR: %s",e);
         }
     }
-
-    public static boolean searchUser(String userName, String email, boolean DEBUG) {
-
-    return false;}
         
     /**
      * Evaluates email string for defined formatting of an appropriate email.
@@ -145,10 +141,59 @@ public class game {
     }
 
     /**
-     * Adds a user to the save file, constructing the "save" as email|username|bankroll
+     * Seraches for the email hash, compares the username hashes, and if matching, returnes the bankrll amount and the response code.
      * @author Fra3zz
      * @version 1.0.0
      * @return String
+     * @param 
+     */
+    public static String findUser(String username, String email, String file, boolean DEBUG){
+        //0 - Error; 1 - User validated; 2 - User info invalid; 3 - User not found
+
+        try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while((line = reader.readLine()) != null){
+
+                if(DEBUG){
+                    System.out.printf("DEBUG %s\n", line); //DEBUG only output
+                }
+
+                String[] user = line.split("[|]");
+
+
+
+                if(user[0].equals(SHA_256_B64(email, DEBUG))){
+
+                    if(DEBUG){
+                        System.out.printf("DEBUG Email found: %s as %s\n", email, user[0]);
+                    }
+                    if(user[1].equals(SHA_256_B64(username, DEBUG))){
+
+                        if(DEBUG){
+                            System.out.printf("DEBUG Username found for %s as %s.\nDEBUG Bankroll: %s\n", username, user[0], user[2]);
+                        }
+                        return "1" + "|" + user[2]; //User found and bankroll amount and status returned.
+                    }
+                    else {
+                        return "2|INVALID"; //Invalid credentials
+                    }
+
+                } else{
+                    return "3|NOT_FOUND"; //User not found
+                }
+            }
+        } catch (IOException e){
+            System.err.printf("ERROR: %s\n",e);
+            return "0|ERROR"; //Error
+        }
+
+    return "0|ERROR";}
+
+    /**
+     * Adds a user to the save file, constructing the "save" as email|username|bankroll. Returnes a boolean designating if the user was added.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return boolean
      * @param 
      */
     public static boolean addUser(String username, String email, String file, boolean DEBUG, int bankRoll){
@@ -197,6 +242,8 @@ public class game {
     
     //-----------METHOD CALLS------------
 
-    addUser("Fra3zz", "j@j.com", SAVEPATH, DEBUG, 100);
+    //addUser("Fra3zz", "j@j.com", SAVEPATH, DEBUG, 100);
+    String thing = findUser("Fra3zz", "j@j.com", SAVEPATH, DEBUG);
+    System.out.println(thing);
     }
 }
