@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.util.Base64;
 
 public class game {
@@ -22,8 +23,8 @@ public class game {
      * @throws IOException
      */
     public static void writeLineToFile(String content, String filePath, boolean DEBUG){
-         try(PrintWriter writer = new PrintWriter(new File(filePath))){
-            writer.println(content);
+         try(FileWriter writer = new FileWriter(new File(filePath), true)){
+            writer.write("\n" + content);
             if(DEBUG){
                 System.out.printf("DEBUG Line was writen to file '%s' with content '%s'.", filePath, content);
             }
@@ -143,8 +144,28 @@ public class game {
             return data_encoded;
     }
 
-    public static void registerUser(String username, String email, boolean DEBUG){
+    /**
+     * Adds a user to the save file, constructing the "save" as email|username|bankroll
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return String
+     * @param 
+     */
+    public static boolean addUser(String username, String email, String file, boolean DEBUG, int bankRoll){
 
+
+        if(validateEmail(email, DEBUG)){
+            //Constructs the payload as "email hash|username hash|bankroll"
+            String payload = "" + SHA_256_B64(email, DEBUG) + "|" + SHA_256_B64(username, DEBUG) + "|" + bankRoll;
+            writeLineToFile(payload, file, DEBUG);  
+            return true;
+        } else{
+
+            if(DEBUG){
+                System.err.println("ERROR: Invalid email");
+            }
+            return false;
+        }
     }
 
     /**
@@ -176,5 +197,6 @@ public class game {
     
     //-----------METHOD CALLS------------
 
+    addUser("Fra3zz", "j@j.com", SAVEPATH, DEBUG, 100);
     }
 }
