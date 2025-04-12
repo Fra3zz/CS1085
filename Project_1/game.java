@@ -344,9 +344,6 @@ public class game {
         }
     }
 
-    public static void banker(String userBankroll, int multiplier, boolean DEBUG){
-        int bankroll = Integer.parseInt(userBankroll.split("[|]")[1]);
-    }
 
     /**
      * Evaluates the "first roll" from the dice roll sum input. Reduces and increases bankroll based upon win/lose criteria.
