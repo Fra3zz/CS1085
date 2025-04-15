@@ -1,8 +1,8 @@
 import java.util.Random;
+import java.util.Scanner;
 
 import javax.management.RuntimeErrorException;
 import javax.print.DocFlavor.STRING;
-
 import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -378,7 +378,87 @@ public class game {
         }
     }
 
+    /**
+     * Method for the registration interface based upon users decision in manu. Returns true if the user was successfully registerd.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return boolean
+     * @param 
+     */
+    public static boolean regUserIf(Scanner scnr, boolean DEBUG, String file, int startinggBankRoll) {
+        String username;
+        String email;
 
+        System.out.println("Please input your desired username: ");
+        username = scnr.nextLine(); // Username input
+
+        System.out.println("Please input your email: ");
+        email = scnr.nextLine(); //Email input
+
+        while(!validateEmail(email, DEBUG)){
+            System.out.println("Invalid email. Please input a valid email: ");
+            email = scnr.nextLine(); //If email invalid, new email input
+        }
+
+        if(isUserRegisterd(email, file, DEBUG)){
+            System.out.println("User is already registerd, please loggin.");
+            username = null;
+            email = null;
+            return false;
+        } else {
+            addUser(username, email, file, DEBUG, startinggBankRoll);
+            return true;
+        }
+
+    }
+    
+
+    /**
+     * As criteria was to not have any login int eh main method, majority of the starting logic is in this method. THis method initializes the starting menu.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     */
+    public static void start(Scanner scnr, String name, boolean DEBUG, String file, int startinggBankRoll) {
+
+        boolean authorized = false;
+        String choice = "";
+
+        while (!authorized && !choice.equals("3")){
+            System.out.printf("Welcome to %s’s Dice Game: Main Menu\n\n", name); //MOTD
+            System.out.println("Please pay attention as our menu options have changed. Type in your desired shoice (1, 2, or 3)");
+
+            System.out.println("1 - Login");
+            System.out.println("2 - Register");
+            System.out.println("3 - Quit\n");
+
+            choice  = scnr.nextLine().toString();
+
+            while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")){
+                System.out.println("Invalid choice. Please pick fom the menu.");
+                System.out.println("1 - Login");
+                System.out.println("2 - Register");
+                System.out.println("3 - Quit\n");
+
+                choice  = scnr.nextLine().toString();
+            }
+                // Register = 2
+                if(choice.equals("2")){
+                    if(regUserInterface(scnr, DEBUG, file, startinggBankRoll)){
+                        authorized = true;
+                    } else {}
+                }
+
+                // Exit/Quite = 3
+                if(choice.equals("3")){
+
+                    // Good bye
+                    System.out.println("Have a greate day and dont forget to cash out!!");
+                    return;
+                }
+            } 
+        }
     
     public static void main(String[] args) {
 
@@ -390,9 +470,21 @@ public class game {
     //DEBUG true/false with default of false
     boolean DEBUG = true;
 
-    
+    //Starting bank roll for new users.
+    int STARTBR = 100;
+
+    String NAME = "Fra3zz";
+
+    //-----------Utils------------
+    Scanner scnr = new Scanner(System.in);
+
+    start(scnr, NAME, DEBUG, SAVEPATH, 100);
+
     //-----------METHOD CALLS------------
-    //addUser("john doe12", "bob12@bob.com", SAVEPATH, DEBUG, 100);
-    editBankRoll(SAVEPATH, "bob@bob.com", 100000, DEBUG);
+
+
+
+
     }
+
 }
