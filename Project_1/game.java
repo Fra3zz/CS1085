@@ -1,9 +1,5 @@
 import java.util.Random;
 import java.util.Scanner;
-
-import javax.management.RuntimeErrorException;
-import javax.print.DocFlavor.STRING;
-import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.io.File;
