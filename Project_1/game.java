@@ -445,7 +445,7 @@ public class game {
             }
                 // Register = 2
                 if(choice.equals("2")){
-                    if(regUserInterface(scnr, DEBUG, file, startinggBankRoll)){
+                    if(regUserIf(scnr, DEBUG, file, startinggBankRoll)){
                         authorized = true;
                     } else {}
                 }
