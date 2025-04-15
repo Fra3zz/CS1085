@@ -159,7 +159,8 @@ public class game {
     }
 
     /**
-     * Seraches for the email hash, compares the username hashes, and if matching, returnes the bankrll amount and the response code.
+     * Seraches for the email hash, compares the username hashes, and if matching, returnes the bankroll amount and the response code as "code | bankroll or error status". 
+     *  Returns 0 = ERROR, 1 = User Validated, 2 = User info invalid, 3 = User not found.
      * @author Fra3zz
      * @version 1.0.0
      * @return String
@@ -425,10 +426,52 @@ public class game {
         }
 
     }
+
+    /**
+     * Log-in interface for authenticating username and email returning a string with the authorized users bankroll or MENU code to return to the menu.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return String
+     * @param 
+     */
+    public static String logginIf(Scanner scanner, String file, boolean DEBUG){
+        System.out.println("Please input your registerd username: ");
+        String email = scanner.nextLine().toString();
+        System.out.println("Please input your eamail: ");
+        String username = scanner.nextLine().toString();
+        String authorization = userAuth(username, email, file, DEBUG);
+        String bankroll;
+
+        while (!authorization.split("[|]")[0].equals("1")) {
+
+            //Gets the username again
+            System.out.println("Invalid username or email. \nPlease enter your username or return to the main menu(0): ");
+            username = scanner.nextLine().toString();
+
+            if(username.equals("0")){
+                return "MENU";
+            }
+
+            //Gets the email again.
+            System.out.println("Please input your email or return to the main menu(0): ");
+            email = scanner.nextLine().toString();
+
+            if(email.equals("0")){
+                return "MENU";
+            }
+
+            authorization = userAuth(username, email, file, DEBUG);
+        }
+        bankroll = authorization.split("[|]")[1];
+
+        System.out.printf("You have been authorized %s\n", username);
+        System.out.printf("Your current bankroll is $%s. Taking you to the table...\n", bankroll);
+        return bankroll;
+    }
     
 
     /**
-     * As criteria was to not have any login int eh main method, majority of the starting logic is in this method. THis method initializes the starting menu.
+     * As criteria was to not have any logic in the main main method, majority of the starting logic is in this method. This method initializes the starting menu.
      * @author Fra3zz
      * @version 1.0.0
      * @return void
@@ -440,7 +483,7 @@ public class game {
         String choice = "";
 
         while (!authorized && !choice.equals("3")){
-            System.out.printf("Welcome to %s’s Dice Game: Main Menu\n\n", name); //MOTD
+            System.out.printf("Welcome to %ss Dice Game: Main Menu\n\n", name); //MOTD
             System.out.println("Please pay attention as our menu options have changed. Type in your desired shoice (1, 2, or 3)");
 
             System.out.println("1 - Login");
@@ -457,18 +500,28 @@ public class game {
 
                 choice  = scnr.nextLine().toString();
             }
+
+                //Loggin = 1
+                if(choice.equals("1")){
+
+                    String authorizedAndBankroll = logginIf(scnr, file, DEBUG);
+
+                    if(!authorizedAndBankroll.equals("MENU")){
+                        //Pass bankroll amount to game.
+                    }
+                }
+
                 // Register = 2
                 if(choice.equals("2")){
-                    if(regUserIf(scnr, DEBUG, file, startinggBankRoll)){
-                        authorized = true;
-                    } else {}
+                    regUserIf(scnr, DEBUG, file, startinggBankRoll);
+                    System.out.println("Thank you for registering. Please log-in(1).");
                 }
 
                 // Exit/Quite = 3
                 if(choice.equals("3")){
 
                     // Good bye
-                    System.out.println("Have a greate day and dont forget to cash out!!");
+                    System.out.println("Have a greate day and don't forget to cash out!!");
                     return;
                 }
             } 
