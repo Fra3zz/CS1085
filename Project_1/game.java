@@ -18,6 +18,24 @@ import java.util.List;
 
 public class game {
 
+    public static void main(String[] args) {
+
+        //-----------CONSTANTS------------
+    
+        //Settings
+        String SAVEPATH = "./saves.txt"; //File path
+        boolean DEBUG = true; //DEBUG
+        int STARTBR = 100; //Default bankroll allocated to user on registration
+        String NAME = "Fra3zz"; //Authors name
+
+        //-----------Utils------------
+        Scanner scnr = new Scanner(System.in);
+    
+        //-----------METHOD CALLS------------
+        start(scnr, NAME, DEBUG, SAVEPATH, STARTBR);
+    
+        }
+
     /**
      * Method that writes lines to a file based upon string input and file path
      * @author Fra3zz
@@ -459,32 +477,5 @@ public class game {
                 }
             } 
         }
-    
-    public static void main(String[] args) {
-
-    //-----------CONSTANTS------------
-
-    //Full save path
-    String SAVEPATH = "./saves.txt";
-
-    //DEBUG true/false with default of false
-    boolean DEBUG = true;
-
-    //Starting bank roll for new users.
-    int STARTBR = 100;
-
-    String NAME = "Fra3zz";
-
-    //-----------Utils------------
-    Scanner scnr = new Scanner(System.in);
-
-    start(scnr, NAME, DEBUG, SAVEPATH, 100);
-
-    //-----------METHOD CALLS------------
-
-
-
-
-    }
 
 }
