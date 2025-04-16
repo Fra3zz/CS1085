@@ -373,13 +373,13 @@ public class game {
         System.out.println("Please input your desired username (A-Z, a-Z, no spaces): ");
         username = scnr.nextLine(); // Username input
 
-        System.out.println("Please input your email (No special characters): ");
-        email = scnr.nextLine(); //Email input
-
         while(!validateUsername(username, DEBUG)){
             System.out.println("Invalid username. Please input a valid username(A-Z, a-Z, no spaces): ");
             username = scnr.nextLine(); //Username invalid, request new username.
         }
+
+        System.out.println("Please input your email (No special characters): ");
+        email = scnr.nextLine(); //Email input
 
         while(!validateEmail(email, DEBUG)){
             System.out.println("Invalid email. Please input a valid email: ");
@@ -405,7 +405,7 @@ public class game {
      * @return void
      * @param 
      */
-    public static void rollPoint(int point, int bet, Scanner scanner, String file, String email, int bank, boolean DEBUG){
+    public static int rollPoint(int point, int bet, Scanner scanner, String file, String email, int bank, boolean DEBUG){
         boolean fail = false;
 
         while(!fail){
@@ -420,13 +420,15 @@ public class game {
                 System.out.printf("You hit point:) .  %s added to your bank.\nBank: %s \n", bet, bank);
             } else if(roll == 7){
                 editBankRoll(file, email, bank - bet, DEBUG);
-                bank -= bet;
+                bank = bank - bet;
                 fail = true;
                 System.out.printf("You hit 7 :( . %s removed from your bank.\nBank: %s\n", bet, bank);
+                return bank;
             } else {
                 System.out.println("You dindt hit point or 7. Keep em' rolling!");
             }
         }
+        return 0;
     }
 
     /**
@@ -503,7 +505,7 @@ public class game {
 
         while(!choice.equals("0")){
             System.out.println("Welcome to the table! You can choose from the menu below: ");
-            System.out.printf("1 - Play game\n0 - Back to main menu\n\nCurrent Bankroll: $%s\n", bankRoll);
+            System.out.printf("1 - Play game\n0 - Back to main menu\n\nCurrent Bankroll: $%s\n", bank);
 
             choice = scanner.nextLine().toString();
 
@@ -512,14 +514,13 @@ public class game {
                 System.out.println("How much do you want to bet?: ");
                 while(!valid){
                     userInput = scanner.nextLine().toString();
+
                     if(validateInt(userInput, DEBUG)){
                         bet = Integer.parseInt(userInput);
-                        if(bet <= bank && bet > 0){
-                            valid = true;
-
-                        } else {
-
-                        }
+                    }
+                    if(bet <= bank && bet > 0){
+                        valid = true;
+                        
                     } else {
                         System.out.printf("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.\nYour current bankroll is $%s.\nPlease input your bet: ", bank);
                     }
@@ -544,10 +545,8 @@ public class game {
                     rollInt = 0;
 
                     System.out.printf("You are rolling point with a point of %s\nPress enter for your next roll.\n", point);
-                    rollPoint(point, bet, scanner, file, email, bank, DEBUG);
+                    bank = rollPoint(point, bet, scanner, file, email, bank, DEBUG);
                 }
-
-
             }
         }
     }
