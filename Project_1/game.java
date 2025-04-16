@@ -290,30 +290,6 @@ public class game {
         return total;
 }
     
-    
-    
-    /*
-        The Come-out Roll aka “the first roll” of the two six-sided dice:
-
-        If the sum of the numbers on the dice is either 7 or 11; the player wins and 
-            the game is over.
-
-        If the sum of the numbers on the dice is either 2, 3 or 12; 
-            the player loses, and the game is over. (aka crap out) 
-
-        If the sum of the numbers on the dice is any other number, that number 
-            becomes the point, and the game continues 
-
-        Follow-up rolls, aka “rolling the point”: 
-
-        If the initial roll results in a point, the player will continue to roll the dice and 
-            every time they roll the same point.
-
-        If the player rolls any other number that is not “the point” or “7”, the game 
-            continues to the next roll
-
-        If the player rolls a “7”, the game is over. (aka 7 out)
-         */
 
     /**
      * Edites the bankroll of designated users account.
@@ -430,6 +406,13 @@ public class game {
 
     }
 
+    /**
+     * Main logic for rolling point. Takes in point socre, bet amount, scanner object, file path, email, bank amount, and debug, returning the user to the table menu if failed or player quits.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     */
     public static void rollPoint(int point, int bet, Scanner scanner, String file, String email, int bank, boolean DEBUG){
         boolean fail = false;
 
@@ -454,6 +437,13 @@ public class game {
         }
     }
 
+    /**
+     * Performs validation of user input with conversion in a try/catch. If not able to convert to an int, throws error and returns false.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return boolean
+     * @param 
+     */
     public static boolean validateInt(String input, boolean DEBUG) {
         try{
             Integer.valueOf(input);
@@ -505,6 +495,13 @@ public class game {
         return info;
     }
 
+    /**
+     * Main game logic that takes bank roll amount, scanner object, file path, email, and debug settings. Performs game logic.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     */
     public static void play_game(String bankRoll, Scanner scanner, String file, String email, boolean DEBUG){
         String choice = "";
         int bank = Integer.parseInt(bankRoll);
