@@ -20,7 +20,7 @@ public class game {
     
         //Settings
         String SAVEPATH = "./saves.txt"; //File path
-        boolean DEBUG = true; //DEBUG
+        boolean DEBUG = false; //DEBUG
         int STARTBR = 100; //Default bankroll allocated to user on registration
         String NAME = "Fra3zz"; //Authors name
 
@@ -241,7 +241,7 @@ public class game {
         Random rand = new Random();
         String number = "" + (rand.nextInt(6) + 1) + "|" + (rand.nextInt(6) + 1);
         if(DEBUG){
-            System.out.printf("DEBUG Number generated is %s.",number);
+            System.out.printf("DEBUG Number generated is %s.\n",number);
         }
         return(number);
     }
@@ -282,10 +282,12 @@ public class game {
      * @return int
      * @param 
      */
-    public static int scoreDice(String diceRoll, boolean DEBUG) {
-
-         String[] roll = diceRoll.split("[|]");
-        return Integer.parseInt(roll[0]) + Integer.parseInt(roll[1]);
+    public static int scoreDice(boolean DEBUG) {
+        String diceRoll = diceRoll(DEBUG); //Rolls dice
+        String[] roll = diceRoll.split("[|]");
+        int total = Integer.parseInt(roll[0]) + Integer.parseInt(roll[1]);
+        System.out.printf("Roll:  %s-%s\nTotal: %s.\n", roll[0], roll[1], total);
+        return total;
 }
     
     
@@ -320,7 +322,7 @@ public class game {
      * @return void
      * @param 
      */
-    public static void editBankRoll(String file, String email, int bankRollAmount, boolean DEBUG) {
+    public static void editBankRoll(String file, String email, int newbBankRollAmount, boolean DEBUG) {
         List<String> lines = new ArrayList<>();
         boolean lineReplaced = false;
 
@@ -333,7 +335,7 @@ public class game {
 
                 if (line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG))) {
                     String[] user = line.split("[|]");
-                    String payload = user[0] + "|" + user[1] + "|" + bankRollAmount;
+                    String payload = user[0] + "|" + user[1] + "|" + newbBankRollAmount;
                     lines.add(payload);
                     lineReplaced = true;
 
@@ -368,7 +370,8 @@ public class game {
 
 
     /**
-     * Evaluates the "first roll" from the dice roll sum input. Reduces and increases bankroll based upon win/lose criteria.
+     * Evaluates the "first roll" from the dice roll sum input. Reduces and increases bankroll based upon win/lose criteria. Can return "GOOD_END",
+     * "BAD_END", and "???"".
      * @author Fra3zz
      * @version 1.0.0
      * @return String
@@ -427,8 +430,41 @@ public class game {
 
     }
 
+    public static void rollPoint(int point, int bet, Scanner scanner, String file, String email, int bank, boolean DEBUG){
+        boolean fail = false;
+
+        while(!fail){
+            System.out.println("Roll the dice(Enter): \n");
+            scanner.nextLine().toString();
+
+            int roll = scoreDice(DEBUG);
+
+            if(roll == point){
+                editBankRoll(file, email, bank + bet, DEBUG);
+                bank += bet;
+                System.out.printf("You hit point:) .  %s added to your bank.\nBank: %s \n", bet, bank);
+            } else if(roll == 7){
+                editBankRoll(file, email, bank - bet, DEBUG);
+                bank -= bet;
+                fail = true;
+                System.out.printf("You hit 7 :( . %s removed from your bank.\nBank: %s\n", bet, bank);
+            } else {
+                System.out.println("You dindt hit point or 7. Keep em' rolling!");
+            }
+        }
+    }
+
+    public static boolean validateInt(String input, boolean DEBUG) {
+        try{
+            Integer.valueOf(input);
+            return true;
+        } catch (Exception e){
+            return false;
+        }
+    }
+
     /**
-     * Log-in interface for authenticating username and email returning a string with the authorized users bankroll or MENU code to return to the menu.
+     * Log-in interface for authenticating username and email returning a string with the authorized users bankroll and email or MENU code to return to the menu.
      * @author Fra3zz
      * @version 1.0.0
      * @return String
@@ -436,11 +472,11 @@ public class game {
      */
     public static String logginIf(Scanner scanner, String file, boolean DEBUG){
         System.out.println("Please input your registerd username: ");
-        String email = scanner.nextLine().toString();
-        System.out.println("Please input your eamail: ");
         String username = scanner.nextLine().toString();
+        System.out.println("Please input your eamail: ");
+        String email = scanner.nextLine().toString();
         String authorization = userAuth(username, email, file, DEBUG);
-        String bankroll;
+        String info;
 
         while (!authorization.split("[|]")[0].equals("1")) {
 
@@ -462,11 +498,69 @@ public class game {
 
             authorization = userAuth(username, email, file, DEBUG);
         }
-        bankroll = authorization.split("[|]")[1];
+        info = authorization.split("[|]")[1] + "|" + email;
 
         System.out.printf("You have been authorized %s\n", username);
-        System.out.printf("Your current bankroll is $%s. Taking you to the table...\n", bankroll);
-        return bankroll;
+        System.out.printf("Your current bankroll is $%s. Taking you to the table...\n", info.split("[|]")[0]);
+        return info;
+    }
+
+    public static void play_game(String bankRoll, Scanner scanner, String file, String email, boolean DEBUG){
+        String choice = "";
+        int bank = Integer.parseInt(bankRoll);
+        int bet = 0;
+        int point = 0;
+        String userInput = "";
+
+        while(!choice.equals("0")){
+            System.out.println("Welcome to the table! You can choose from the menu below: ");
+            System.out.printf("1 - Play game\n0 - Back to main menu\n\nCurrent Bankroll: $%s\n", bankRoll);
+
+            choice = scanner.nextLine().toString();
+
+            if(choice.equals("1")){
+                boolean valid = false;
+                System.out.println("How much do you want to bet?: ");
+                while(!valid){
+                    userInput = scanner.nextLine().toString();
+                    if(validateInt(userInput, DEBUG)){
+                        bet = Integer.parseInt(userInput);
+                        if(bet <= bank && bet > 0){
+                            valid = true;
+
+                        } else {
+
+                        }
+                    } else {
+                        System.out.printf("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.\nYour current bankroll is $%s.\nPlease input your bet: ", bank);
+                    }
+                }
+
+                System.out.println("Roll the dice?");
+                scanner.nextLine().toString();
+
+                //First roll game results as int.
+                int rollInt = scoreDice(DEBUG);
+
+                if(evaluateDice(rollInt, bet, DEBUG).equals("GOOD_END")){
+                    editBankRoll(file, email, bank + bet, DEBUG); //Adds bet amount to users bank.
+                    System.out.printf("YOU WIN\n%s added to bank for a total of %s\n", bet, bank + bet);
+                    bet = 0;
+                } else if (evaluateDice(rollInt, bet, DEBUG).equals("BAD_END")){
+                    editBankRoll(file, email, bank - bet, DEBUG); //Removes bet amount from bank.
+                    System.out.printf("YOU LOST\n%s removed from your bank for a total of %s\n", bet, bank - bet);
+                    bet = 0;
+                } else {
+                    point = rollInt;
+                    rollInt = 0;
+
+                    System.out.printf("You are rolling point with a point of %s\nPress enter for your next roll.\n", point);
+                    rollPoint(point, bet, scanner, file, email, bank, DEBUG);
+                }
+
+
+            }
+        }
     }
     
 
@@ -501,13 +595,13 @@ public class game {
                 choice  = scnr.nextLine().toString();
             }
 
-                //Loggin = 1
+                //Log-in = 1
                 if(choice.equals("1")){
 
                     String authorizedAndBankroll = logginIf(scnr, file, DEBUG);
 
                     if(!authorizedAndBankroll.equals("MENU")){
-                        //Pass bankroll amount to game.
+                        play_game(authorizedAndBankroll.split("[|]")[0], scnr, file, authorizedAndBankroll.split("[|]")[1], DEBUG);
                     }
                 }
 
@@ -526,5 +620,4 @@ public class game {
                 }
             } 
         }
-
 }
