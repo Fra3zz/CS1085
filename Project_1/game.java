@@ -102,6 +102,18 @@ public class game {
     }
 
     /**
+     * Validates username with username and DEBUG input utilizing regex compareison
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return boolean
+     * @param 
+     * @throws IOException
+     */
+    public static boolean validateUsername(String username, boolean DEBUG) {
+        return username.matches("[A-Za-z]+"); //Checks if username has one of more characters A-Z and a-z
+    }
+
+    /**
      * Makes SHA_256 hash of the message input, returning a byte array.
      * @author Fra3zz
      * @version 1.0.0
@@ -358,11 +370,16 @@ public class game {
         String username;
         String email;
 
-        System.out.println("Please input your desired username: ");
+        System.out.println("Please input your desired username (A-Z, a-Z, no spaces): ");
         username = scnr.nextLine(); // Username input
 
-        System.out.println("Please input your email: ");
+        System.out.println("Please input your email (No special characters): ");
         email = scnr.nextLine(); //Email input
+
+        while(!validateUsername(username, DEBUG)){
+            System.out.println("Invalid username. Please input a valid username(A-Z, a-Z, no spaces): ");
+            username = scnr.nextLine(); //Username invalid, request new username.
+        }
 
         while(!validateEmail(email, DEBUG)){
             System.out.println("Invalid email. Please input a valid email: ");
