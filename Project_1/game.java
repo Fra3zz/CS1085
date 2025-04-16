@@ -150,14 +150,14 @@ public class game {
 
     /**
      * Seraches for the email hash, compares the username hashes, and if matching, returnes the bankroll amount and the response code as "code | bankroll or error status". 
-     *  Returns 0 = ERROR, 1 = User Validated, 2 = User info invalid, 3 = User not found.
+     *  Returns 0 = ERROR, 1 = User Validated, 2 = User info invalid, 3 = User not found, 4 - bank empty.
      * @author Fra3zz
      * @version 1.0.0
      * @return String
      * @param 
      */
     public static String userAuth(String username, String email, String file, boolean DEBUG){
-        //0 - Error; 1 - User validated; 2 - User info invalid; 3 - User not found
+        //0 - Error; 1 - User validated; 2 - User info invalid; 3 - User not found; 4 - Users bank emtpy
 
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
@@ -173,6 +173,10 @@ public class game {
                         System.out.println("DEBUG Email found");
                     }
                     if(line.split("[|]")[1].equals(SHA_256_B64(username, DEBUG))){
+
+                        if(line.split("[|]")[2].equals("0")){
+                            return "4|EMPTY_BANK";
+                        }
 
                         String[] user = line.split("[|]");
 
@@ -462,7 +466,7 @@ public class game {
         String authorization = userAuth(username, email, file, DEBUG);
         String info;
 
-        while (!authorization.split("[|]")[0].equals("1")) {
+        while (!authorization.split("[|]")[0].equals("1") && !authorization.split("[|]")[0].equals("4")) {
 
             //Gets the username again
             System.out.println("Invalid username or email. \nPlease enter your username or return to the main menu(0): ");
@@ -481,6 +485,10 @@ public class game {
             }
 
             authorization = userAuth(username, email, file, DEBUG);
+        }
+
+        if(authorization.split("[|]")[0].equals("4")){
+            return "4|EMPTY_BANK";
         }
         info = authorization.split("[|]")[1] + "|" + email;
 
@@ -588,8 +596,10 @@ public class game {
 
                     String authorizedAndBankroll = logginIf(scnr, file, DEBUG);
 
-                    if(!authorizedAndBankroll.equals("MENU")){
+                    if(!authorizedAndBankroll.equals("MENU") && !authorizedAndBankroll.equals("4|EMPTY_BANK")){
                         play_game(authorizedAndBankroll.split("[|]")[0], scnr, file, authorizedAndBankroll.split("[|]")[1], DEBUG);
+                    } else if(authorizedAndBankroll.equals("4|EMPTY_BANK")){
+                        System.out.println("Sorry but you do not have any money!");
                     }
                 }
 
