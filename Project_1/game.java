@@ -28,7 +28,7 @@ public class game {
         Scanner scnr = new Scanner(System.in);
     
         //-----------METHOD CALLS------------
-        start(scnr, NAME, DEBUG, SAVEPATH, STARTBR);
+        start(scnr, NAME, DEBUG, SAVEPATH, STARTBR); //Starts the application
     
         }
 
@@ -42,34 +42,12 @@ public class game {
      */
     public static void writeLineToFile(String content, String filePath, boolean DEBUG){
          try(FileWriter writer = new FileWriter(new File(filePath), true)){
-            writer.write(content + '\n');
+            writer.write(content + '\n'); //Write content to file next line.
             if(DEBUG){
                 System.out.printf("DEBUG Line was writen to file '%s' with content '%s'.", filePath, content);
             }
         } catch(IOException e) {
             System.err.printf("ERROR: %s", e.getMessage());
-        }
-    }
-
-    /**
-     * Reads from a file input and returns void.
-     * @author Fra3zz
-     * @version 1.0.0
-     * @return void
-     * @param 
-     * @throws IOException
-     */
-    public static void readFile(String filePath, boolean DEBUG){
-        try(BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while((line = reader.readLine()) != null){
-
-                if(DEBUG){
-                    System.out.printf("DEBUG %s\n", line); //DEBUG only output
-                }
-            }
-        } catch (IOException e){
-            System.err.printf("\nERROR: %s",e);
         }
     }
         
@@ -214,15 +192,12 @@ public class game {
      * @param 
      */
     public static boolean addUser(String username, String email, String file, boolean DEBUG, int bankRoll){
-
-
         if(validateEmail(email, DEBUG)){
             //Constructs the payload as "email hash|username hash|bankroll"
-            String payload = "" + SHA_256_B64(email, DEBUG) + "|" + SHA_256_B64(username, DEBUG) + "|" + bankRoll;
-            writeLineToFile(payload, file, DEBUG);  
+            String payload = "" + SHA_256_B64(email, DEBUG) + "|" + SHA_256_B64(username, DEBUG) + "|" + bankRoll; //Makes string to add to save file.
+            writeLineToFile(payload, file, DEBUG); //Write line to file.
             return true;
         } else{
-
             if(DEBUG){
                 System.err.println("ERROR: Invalid email");
             }
