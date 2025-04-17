@@ -224,7 +224,7 @@ public class game {
     }
 
     /**
-     * Checks if a user is registerd by comparing email hashes. Quick method for checking is a user is already registerd. 
+     * Checks if a user is registerd by comparing email hashes. Quick method for checking if a user is already registerd. 
      * @author Fra3zz
      * @version 1.0.0
      * @return boolean
@@ -253,7 +253,7 @@ public class game {
     return false;}
     
     /**
-     * Converts the diceRoll result to ints and returns an int sum.
+     * Converts the diceRoll string result to ints and returns an int sum.
      * @author Fra3zz
      * @version 1.0.0
      * @return int
@@ -269,8 +269,8 @@ public class game {
     
 
     /**
-     * Edites the bankroll of designated users account by evaluating if each string has teh SHA256 b64 email, 
-     * if found, reaplced with nw(updated) string, writes it, if not original line is writen to file. Keeps user info in
+     * Edites the bankroll of designated users account identifying the account on users email hash, 
+     * replacing it with a new(updated) string, writes it, if not users account, original line is writen to file. Keeps user info in
      * the same order. Takes in file string, email string, bankroll string, and boolean DEBUG
      * @author Fra3zz
      * @version 1.0.0
@@ -616,8 +616,9 @@ public class game {
 
                 // Register = 2
                 if(choice.equals("2")){
-                    regUserIf(scnr, DEBUG, file, startinggBankRoll);
-                    System.out.println("Thank you for registering. Please log-in(1).");
+                    if(regUserIf(scnr, DEBUG, file, startinggBankRoll)){
+                        System.out.println("Thank you for registering. Please log-in(1).");
+                    }
                 }
 
                 // Exit/Quite = 3
