@@ -442,10 +442,10 @@ public class game {
      * @return String
      * @param 
      */
-    public static String logginIf(Scanner scanner, String file, boolean DEBUG){
+    public static String logginIf(Scanner scanner, String file, boolean DEBUG){ //Dose not check for valid username and email for security.
         System.out.println("Please input your registerd username: ");
         String username = scanner.nextLine().toString();
-        System.out.println("Please input your eamail: ");
+        System.out.println("Please input your esmail: ");
         String email = scanner.nextLine().toString().toLowerCase();
         String authorization = userAuth(username, email, file, DEBUG);
         String info;
