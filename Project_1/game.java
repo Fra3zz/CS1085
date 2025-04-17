@@ -543,6 +543,27 @@ public class game {
         }
     }
 
+    /**
+     * Check is the save file exists, if not it makes the file. Accepts file string and DEBUG boolean.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     */
+    public static void checkForSaveFile(String file, boolean DEBUG) {
+        File fileCheck = new File(file);
+        if(!fileCheck.exists()){ //Checks if file exists.
+            try(FileWriter writer = new FileWriter(fileCheck)){
+                if(DEBUG){
+                    System.out.println("Making file."); //DEBUG
+                }
+                writer.write("");
+            } catch (Exception e){
+                System.err.println("ERROR: " + e);
+            }
+        }
+    }
+
 
     /**
      * As criteria was to not have any logic in the main main method, majority of the starting logic is in this method. This method initializes the starting menu.
@@ -556,18 +577,7 @@ public class game {
         boolean authorized = false;
         String choice = "";
 
-        File fileCheck = new File(file);
-
-        if(!fileCheck.exists()){ //Checks if file exists.
-            try(FileWriter writer = new FileWriter(fileCheck)){
-                if(DEBUG){
-                    System.out.println("Making file."); //DEBUG
-                }
-                writer.write("");
-            } catch (Exception e){
-                System.err.println("ERROR: " + e);
-            }
-        }
+        checkForSaveFile(file, DEBUG);
 
         while (!authorized && !choice.equals("3")){
             System.out.printf("Welcome to %ss Dice Game: Main Menu\n\n", name); //MOTD
