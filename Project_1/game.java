@@ -417,7 +417,7 @@ public class game {
                 System.out.printf("You hit 7 :( . %s removed from your bank.\nBank: %s\n", bet, bank);
                 return bank;
             } else {
-                System.out.println("You dindt hit point or 7. Keep em' rolling!");
+                System.out.printf("You did not hit %s(point) or 7. Keep em' rolling!\n", point);
             }
         }
         return 0;
@@ -432,8 +432,13 @@ public class game {
      */
     public static boolean validateInt(String input, boolean DEBUG) {
         try{
-            Integer.valueOf(input);
-            return true;
+            Integer.valueOf(input); //Tries to convert the string value to an int. If unable to (due to invalid user input), 
+            //throws error indicating invalid conversion and invalid intiger.
+            if(Integer.valueOf(input) > 0){ //Checks if value is greater than 0 (positive ints only).
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception e){
             return false;
         }
