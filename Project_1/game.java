@@ -47,7 +47,7 @@ public class game {
         boolean validStartChar;
         boolean validEndChar;
 
-        if(email.isBlank() || email.isEmpty() || email.strip().length() < email.length()){
+        if(email.isBlank() || email.isEmpty() || email.strip().length() < email.length()){ //Checks if the email input is empty, blank, or has any spaces that should not be in the email.
             return false;
         }
   
