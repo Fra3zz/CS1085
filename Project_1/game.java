@@ -96,7 +96,7 @@ public class game {
      * @throws IOException
      */
     public static boolean validateUsername(String username, boolean DEBUG) {
-        return username.matches("[A-Za-z]+"); //Checks if username has one or more characters in A-Z and a-z
+        return username.matches("[A-Za-z]+"); //Checks if username has one or more characters in A-Z and a-z.
     }
 
     /**
@@ -143,7 +143,7 @@ public class game {
      * @param 
      */
     public static String userAuth(String username, String email, String file, boolean DEBUG){
-        //0 - Error; 1 - User validated; 2 - User info invalid; 3 - User not found; 4 - Users bank emtpy
+        //0 - Error; 1 - User validated; 2 - User info invalid; 3 - User not found; 4 - Users bank empty
 
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
