@@ -409,7 +409,7 @@ public class game {
             if(roll == point){
                 editBankRoll(file, email, bank + bet, DEBUG);
                 bank += bet;
-                System.out.printf("You hit point:)\n  %s added to your bank.\nBank: %s \n", bet, bank);
+                System.out.printf("You hit point :)\n  %s added to your bank.\nBank: %s \n", bet, bank);
             } else if(roll == 7){
                 editBankRoll(file, email, bank - bet, DEBUG);
                 bank = bank - bet;
