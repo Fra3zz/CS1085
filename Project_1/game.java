@@ -401,7 +401,7 @@ public class game {
         boolean fail = false;
 
         while(!fail){
-            System.out.println("Roll the dice(Enter): \n");
+            System.out.println("Roll the dice? (ENTER): \n");
             scanner.nextLine().toString();
 
             int roll = scoreDice(DEBUG);
@@ -522,7 +522,7 @@ public class game {
                     }
                 }
 
-                System.out.println("Roll the dice?");
+                System.out.println("Roll the dice? (ENTER)");
                 scanner.nextLine().toString();
 
                 //First roll game results as int.
