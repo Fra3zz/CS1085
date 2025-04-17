@@ -409,12 +409,12 @@ public class game {
             if(roll == point){
                 editBankRoll(file, email, bank + bet, DEBUG);
                 bank += bet;
-                System.out.printf("You hit point:) .  %s added to your bank.\nBank: %s \n", bet, bank);
+                System.out.printf("You hit point:)\n  %s added to your bank.\nBank: %s \n", bet, bank);
             } else if(roll == 7){
                 editBankRoll(file, email, bank - bet, DEBUG);
                 bank = bank - bet;
                 fail = true;
-                System.out.printf("You hit 7 :( . %s removed from your bank.\nBank: %s\n", bet, bank);
+                System.out.printf("You hit 7 :(\n %s removed from your bank.\nBank: %s\n", bet, bank);
                 return bank;
             } else {
                 System.out.printf("You did not hit %s(point) or 7. Keep em' rolling!\n", point);
