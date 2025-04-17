@@ -43,9 +43,13 @@ public class game {
      */
     public static boolean validateEmail(String email, boolean DEBUG) {
         boolean no_invalid_chars = true;
-        String[] invalidChars = {"[", "]", "\"", "\\", ":", ";", ",", "<", ">", "(", ")", "/"}; //Array of characters that are not permitted in email.
+        String[] invalidChars = {"[", "]", "\"", "\\", ":", ";", ",", "<", ">", "(", ")", "/", " "}; //Array of characters that are not permitted in email.
         boolean validStartChar;
         boolean validEndChar;
+
+        if(email.isBlank() || email.isEmpty() || email.strip().length() < email.length()){
+            return false;
+        }
   
         for(int i = 0; i<invalidChars.length; i++){
             if(email.contains(invalidChars[i])){ //Iterates for invalid characters in the email.
@@ -367,7 +371,7 @@ public class game {
         }
 
         System.out.println("Please input your email (No special characters): ");
-        email = scnr.nextLine().toString().toLowerCase(); //Email input
+         email = scnr.nextLine().toString().toLowerCase(); //Email input
 
         while(!validateEmail(email, DEBUG)){
             System.out.println("Invalid email. Please input a valid email: ");
