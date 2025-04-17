@@ -540,7 +540,7 @@ public class game {
                     point = rollInt;
                     rollInt = 0;
 
-                    System.out.printf("You are rolling point with a point of %s\nPress enter for your next roll.\n", point);
+                    System.out.printf("You are rolling point with a point of %s\n", point);
                     bank = rollPoint(point, bet, scanner, file, email, bank, DEBUG);
                 }
             }
