@@ -437,9 +437,6 @@ public class game {
     public static boolean validateInt(String input, boolean DEBUG) {
         try{
 
-            if(input.matches("[^A-Za-z]")){
-                return false;
-            }
             Integer.valueOf(input); //Tries to convert the string value to an int. If unable to (due to invalid user input), 
             //throws error indicating invalid conversion and invalid intiger.
             if(Integer.valueOf(input) > 0){ //Checks if value is greater than 0 (positive ints only).
