@@ -432,6 +432,10 @@ public class game {
      */
     public static boolean validateInt(String input, boolean DEBUG) {
         try{
+
+            if(input.matches("[^A-Za-z]")){
+                return false;
+            }
             Integer.valueOf(input); //Tries to convert the string value to an int. If unable to (due to invalid user input), 
             //throws error indicating invalid conversion and invalid intiger.
             if(Integer.valueOf(input) > 0){ //Checks if value is greater than 0 (positive ints only).
@@ -518,17 +522,40 @@ public class game {
 
                     if(validateInt(userInput, DEBUG)){
                         bet = Integer.parseInt(userInput);
-                    }
-                    if(bet <= bank && bet > 0){
-                        valid = true;
-                        
+                        if(bet <= bank && bet > 0){
+                            valid = true;  
+                        }
                     } else {
                         System.out.printf("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.\nYour current bankroll is $%s.\nPlease input your bet: ", bank);
                     }
                 }
 
-                System.out.println("Roll the dice? (ENTER)");
-                scanner.nextLine().toString();
+                String userChoice = "";
+                while(!userChoice.equals("y") && !userChoice.equals("n")){
+                    System.out.println("Roll the dice? (Y)es / (n)o \n");
+                    userChoice = scanner.nextLine().toString();
+                }
+
+                while(userChoice.equals("n")){
+                    valid = false;
+                    while(!valid){
+                        System.out.println("Please input your new bet: ");
+                        String newBet = scanner.nextLine().toString();
+                        if(validateInt(newBet, DEBUG)){
+                        bet = Integer.parseInt(newBet);
+                        if(bet <= bank && bet > 0){
+                            valid = true;
+                    }
+                }else {
+                        System.out.println("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.");
+                    }}
+                    userChoice = "";
+                    while(!userChoice.equals("y") && !userChoice.equals("n")){
+                        System.out.println("Roll the dice? (Y)es / (n)o \n");
+                        userChoice = scanner.nextLine().toString();
+                    }                
+                }
+
 
                 //First roll game results as int.
                 int rollInt = scoreDice(DEBUG);
@@ -547,10 +574,10 @@ public class game {
 
                     System.out.printf("You are rolling point with a point of %s\n", point);
                     bank = rollPoint(point, bet, scanner, file, email, bank, DEBUG);
+                    }
                 }
             }
         }
-    }
 
     /**
      * Check is the save file exists, if not it makes the file. Accepts file string and DEBUG boolean.
