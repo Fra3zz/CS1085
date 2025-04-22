@@ -643,7 +643,7 @@ public class game {
             //Settings
             String SAVEPATH = "./saves.txt"; //File path
             boolean DEBUG = false; //DEBUG
-            int STARTBR = 100; //Default bankroll allocated to user on registration
+            int STARTBR = 500; //Default bankroll allocated to user on registration
             String NAME = "Fra3zz"; //Authors name
     
             //-----------Utils------------
