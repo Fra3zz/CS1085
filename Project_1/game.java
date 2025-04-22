@@ -262,8 +262,12 @@ public class game {
     public static int scoreDice(boolean DEBUG) {
         String diceRoll = diceRoll(DEBUG); //Rolls dice
         String[] roll = diceRoll.split("[|]");
-        int total = Integer.parseInt(roll[0]) + Integer.parseInt(roll[1]);
-        System.out.printf("Roll:  %s-%s\nTotal: %s.\n", roll[0], roll[1], total);
+        int num1 = Integer.parseInt(roll[0]);
+        int num2 = Integer.parseInt(roll[1]);
+        int total = num1 + num2;
+        printDice(num1, DEBUG);
+        printDice(num2, DEBUG);
+        System.out.printf("Total: %s\n", total);
         return total;
 }
     
@@ -649,14 +653,14 @@ public class game {
                     if(!authorizedAndBankroll.equals("MENU") && !authorizedAndBankroll.equals("4|EMPTY_BANK")){
                         play_game(authorizedAndBankroll.split("[|]")[0], scnr, file, authorizedAndBankroll.split("[|]")[1], DEBUG);
                     } else if(authorizedAndBankroll.equals("4|EMPTY_BANK")){
-                        System.out.println("Sorry but you do not have any money!");
+                        System.out.println("Sorry but you do not have any money. Come back when you got some!");
                     }
                 }
 
                 // Register = 2
                 if(choice.equals("2")){
                     if(regUserIf(scnr, DEBUG, file, startinggBankRoll)){
-                        System.out.println("Thank you for registering. Please log-in(1).");
+                        System.out.println("Thank you for registering. Please log-in..");
                     }
                 }
 
@@ -670,21 +674,106 @@ public class game {
             } 
         }
 
-        public static void main(String[] args) {
 
-            //-----------CONSTANTS------------
-        
-            //Settings
-            String SAVEPATH = "./saves.txt"; //File path
-            boolean DEBUG = false; //DEBUG
-            int STARTBR = 500; //Default bankroll allocated to user on registration
-            String NAME = "Fra3zz"; //Authors name
-    
-            //-----------Utils------------
-            Scanner scnr = new Scanner(System.in);
-        
-            //-----------METHOD CALLS------------
-            start(scnr, NAME, DEBUG, SAVEPATH, STARTBR); //Starts the application
-        
+    /**
+     * Prints ASCII art of dice to the console with 1-6 int input.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     */
+    public static void printDice(int diceNumber, boolean DEBUG){
+        switch (diceNumber) {
+            case 1:
+                System.out.println("   _____________\n  |             |\n  |             |\n  |      0      |\n  |             |\n  |_____________|");
+                break;
+                            /**
+     _____________
+    |             |
+    |             |
+    |      0      |
+    |             |
+    |_____________|
+                */
+            case 2:
+                System.out.println("   _____________\n  | 0           |\n  |             |\n  |             |\n  |          0  |\n  |_____________|");
+                break;
+
+                /**
+     _____________
+    | 0           |
+    |             |
+    |             |
+    |          0  |
+    |_____________|
+                    */
+            case 3:
+                System.out.println("   _____________\n  |             |\n  |  0          |\n  |      0      |\n  |          0  |\n  |_____________|");
+                break;
+
+                /**
+     _____________
+    |             |
+    |  0          |
+    |      0      |
+    |          0  |
+    |_____________|
+                    */
+            case 4:
+                    System.out.println("   _____________\n  |             |\n  |  0       0  |\n  |             |\n  |  0       0  |\n  |_____________|");
+                    break;
+
+                    /**
+     _____________
+    |             |
+    |  0       0  |
+    |             |
+    |  0       0  |
+    |_____________|
+                    */
+            case 5:
+                System.out.println("   _____________\n  |             |\n  |  0       0  |\n  |      0      |\n  |  0       0  |\n  |_____________|");
+                break;
+
+                /**
+     _____________
+    |             |
+    |  0       0  |
+    |      0      |
+    |  0       0  |
+    |_____________|
+                */ 
+            case 6:
+                System.out.println("   _____________\n  |             |\n  | 0         0 |\n  | 0         0 |\n  | 0         0 |\n  |_____________|");
+                break;
+
+                /**
+     _____________
+    |             |
+    | 0         0 |
+    | 0         0 |
+    | 0         0 |
+    |_____________|
+                    */
+            default:
+                break;
             }
+        }
+    public static void main(String[] args) {
+
+        //-----------CONSTANTS------------
+    
+        //Settings
+        String SAVEPATH = "./saves.txt"; //File path
+        boolean DEBUG = false; //DEBUG
+        int STARTBR = 500; //Default bankroll allocated to user on registration
+        String NAME = "Fra3zz"; //Authors name
+
+        //-----------Utils------------
+        Scanner scnr = new Scanner(System.in);
+    
+        //-----------METHOD CALLS------------
+        start(scnr, NAME, DEBUG, SAVEPATH, STARTBR); //Starts the application
+    
+        }
 }
