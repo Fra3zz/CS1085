@@ -524,6 +524,8 @@ public class game {
                         bet = Integer.parseInt(userInput);
                         if(bet <= bank && bet > 0){
                             valid = true;  
+                        } else {
+                            System.out.printf("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.\nYour current bankroll is $%s.\nPlease input your bet: ", bank);
                         }
                     } else {
                         System.out.printf("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.\nYour current bankroll is $%s.\nPlease input your bet: ", bank);
@@ -532,7 +534,7 @@ public class game {
 
                 String userChoice = "";
                 while(!userChoice.equals("y") && !userChoice.equals("n")){
-                    System.out.println("Roll the dice? (Y)es / (n)o \n");
+                    System.out.println("Roll the dice? (y)es / (n)o \n");
                     userChoice = scanner.nextLine().toString();
                 }
 
@@ -542,16 +544,19 @@ public class game {
                         System.out.println("Please input your new bet: ");
                         String newBet = scanner.nextLine().toString();
                         if(validateInt(newBet, DEBUG)){
-                        bet = Integer.parseInt(newBet);
+                            bet = Integer.parseInt(newBet);
                         if(bet <= bank && bet > 0){
                             valid = true;
-                    }
-                }else {
+                    } else {
                         System.out.println("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.");
-                    }}
+                    }
+                } else {
+                        System.out.println("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.");
+                    }
+                }
                     userChoice = "";
                     while(!userChoice.equals("y") && !userChoice.equals("n")){
-                        System.out.println("Roll the dice? (Y)es / (n)o \n");
+                        System.out.println("Roll the dice? (y)es / (n)o \n");
                         userChoice = scanner.nextLine().toString();
                     }                
                 }
@@ -563,10 +568,12 @@ public class game {
                 if(evaluateDice(rollInt, bet, DEBUG).equals("GOOD_END")){
                     editBankRoll(file, email, bank + bet, DEBUG); //Adds bet amount to users bank.
                     System.out.printf("YOU WIN\n%s added to bank for a total of %s\n", bet, bank + bet);
+                    bank = bank + bet;
                     bet = 0;
                 } else if (evaluateDice(rollInt, bet, DEBUG).equals("BAD_END")){
                     editBankRoll(file, email, bank - bet, DEBUG); //Removes bet amount from bank.
                     System.out.printf("YOU LOST\n%s removed from your bank for a total of %s\n", bet, bank - bet);
+                    bank = bank - bet;
                     bet = 0;
                 } else {
                     point = rollInt;
