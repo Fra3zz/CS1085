@@ -755,6 +755,14 @@ public class game {
                 break;
             }
         }
+    
+        /**
+     * Main starting method. Ran first.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     */
     public static void main(String[] args) {
 
         //-----------CONSTANTS------------
