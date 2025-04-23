@@ -175,16 +175,15 @@ public class game {
                         return "2|INVALID"; //Invalid credentials
                     }
 
-                } else{
-                    return "3|NOT_FOUND"; //User not found
-                }
+                } 
             }
         } catch (IOException e){
             System.err.printf("ERROR: %s\n",e);
             return "0|ERROR"; //Error
         }
 
-    return "0|ERROR";}
+        return "3|NOT_FOUND"; //User not found
+    }
 
     /**
      * Adds a user to the save file, constructing the "save" as email|username|bankroll. Returnes a boolean designating if the user was added.
@@ -459,7 +458,7 @@ public class game {
     public static String logginIf(Scanner scanner, String file, boolean DEBUG){ //Dose not check for valid username and email for security.
         System.out.println("Please input your registerd username: ");
         String username = scanner.nextLine().toString();
-        System.out.println("Please input your esmail: ");
+        System.out.println("Please input your email: ");
         String email = scanner.nextLine().toString().toLowerCase();
         String authorization = userAuth(username, email, file, DEBUG);
         String info;
@@ -762,7 +761,7 @@ public class game {
     
         //Settings
         String SAVEPATH = "./saves.txt"; //File path
-        boolean DEBUG = false; //DEBUG
+        boolean DEBUG = true; //DEBUG
         int STARTBR = 500; //Default bankroll allocated to user on registration
         String NAME = "Fra3zz"; //Authors name
 
