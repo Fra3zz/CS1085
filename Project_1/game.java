@@ -14,6 +14,8 @@ import java.util.List;
 
 final class game {
 
+    private static String USERHOME = System.getProperty("user.home");
+
     /**
      * Method that writes lines to a file based upon string input and file path
      * @author Fra3zz
@@ -111,11 +113,12 @@ final class game {
      * @param 
      * @throws NoSuchAlgorithmException
      */
-    private static byte[] SHA_256_Salt(String data, String password){
+    private static byte[] SHA_256(String data, String password){
         try{
             //Makes MessageDigest object, setting SHA-256 as the hash/encryption provider.
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            digest.update(password.getBytes()); //Update with password for salting 
+            //Update with password for salting 
+            digest.update((USERHOME + "|" + password).getBytes());
             return digest.digest(data.getBytes()); //Makes byte SHA-256 hash from byte input
         } catch(NoSuchAlgorithmException e){
             throw new RuntimeException("ERROR: " + e); //If any errors, returns an error.
@@ -134,7 +137,7 @@ final class game {
         String data_encoded;
 
             //Gets SHA-256 bytes and base64 encodes them, asigning them to data_encoded.
-            data_encoded = Base64.getEncoder().encodeToString(SHA_256_Salt(message, password));
+            data_encoded = Base64.getEncoder().encodeToString(SHA_256(message, password));
             if(DEBUG){
                 System.out.printf("DEBUG Message base64: %s\n", data_encoded);
             }
@@ -799,7 +802,7 @@ final class game {
 
     private static String getPassword() {
         try{
-            return System.getenv("GAME_PASSWORD");
+            return System.getenv("SECURE_PASSWORD");
         } catch(Exception e){
             return "CS1085-2025";
         }
@@ -817,11 +820,11 @@ final class game {
         //-----------CONSTANTS------------
     
         //Settings
-        String SAVEPATH = "./saves.txt"; //File path
+        String SAVEPATH = USERHOME + "./saves.txt"; //File path
         boolean DEBUG = false; //DEBUG
         int STARTBR = 500; //Default bankroll allocated to user on registration
         String NAME = "Fra3zz"; //Authors name
-        String PASSWORD = getPassword();
+        String PASSWORD = getPassword(); //Set SECURE_PASSWORD env. MAKE SURE IT IS LONG AND SECURE! Defaults to "CS1085-2025"
 
         //-----------Utils------------
         Scanner scnr = new Scanner(System.in);
