@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
 
-public class game {
+final class game {
 
     /**
      * Method that writes lines to a file based upon string input and file path
@@ -22,7 +22,7 @@ public class game {
      * @param 
      * @throws IOException
      */
-    public static void writeLineToFile(String content, String filePath, boolean DEBUG){
+    private static void writeLineToFile(String content, String filePath, boolean DEBUG){
          try(FileWriter writer = new FileWriter(new File(filePath), true)){ // Try..Catch fro FileWriter
             writer.write(content + '\n'); //Write content to file next line.
             if(DEBUG){
@@ -41,7 +41,7 @@ public class game {
      * @param 
      * @throws IOException
      */
-    public static boolean validateEmail(String email, boolean DEBUG) {
+    private static boolean validateEmail(String email, boolean DEBUG) {
         boolean no_invalid_chars = true;
         //Array of characters that are not permitted in email.
         String[] invalidChars = {"[", "]", "\"", "\\", ":", ";", ",", "<", ">", "(", ")", "/", " "}; 
@@ -99,7 +99,7 @@ public class game {
      * @param 
      * @throws IOException
      */
-    public static boolean validateUsername(String username, boolean DEBUG) {
+    private static boolean validateUsername(String username, boolean DEBUG) {
         return username.matches("[A-Za-z]+"); //Checks if username has one or more characters in A-Z and a-z exlusive.
     }
 
@@ -130,7 +130,7 @@ public class game {
      * @return String
      * @param 
      */
-    public static String SHA_256_B64(String message, boolean DEBUG, String password){
+    private static String SHA_256_B64(String message, boolean DEBUG, String password){
         String data_encoded;
 
             //Gets SHA-256 bytes and base64 encodes them, asigning them to data_encoded.
@@ -149,7 +149,7 @@ public class game {
      * @return String
      * @param 
      */
-    public static String userAuth(String username, String email, String file, boolean DEBUG, String password){
+    private static String userAuth(String username, String email, String file, boolean DEBUG, String password){
         //0 - Error; 1 - User validated; 2 - User info invalid; 3 - User not found; 4 - Users bank empty
 
         //Nuw BufferedReader object
@@ -203,7 +203,7 @@ public class game {
      * @return boolean
      * @param 
      */
-    public static boolean addUser(String username, String email, String file, boolean DEBUG, int bankRoll, String password){
+    private static boolean addUser(String username, String email, String file, boolean DEBUG, int bankRoll, String password){
         if(validateEmail(email, DEBUG)){
             //Constructs the payload as "email hash|username hash|bankroll"
             String payload = "" + SHA_256_B64(email, DEBUG, password) + "|" + SHA_256_B64(username, DEBUG, password) + "|" + bankRoll; 
@@ -224,7 +224,7 @@ public class game {
      * @return String
      * @param 
      */
-    public static String diceRoll(boolean DEBUG) {
+    private static String diceRoll(boolean DEBUG) {
         Random rand = new Random(); //New random object
         //Concatinates two random numbers seperated by "|" and returns string
         String number = "" + (rand.nextInt(6) + 1) + "|" + (rand.nextInt(6) + 1);
@@ -241,7 +241,7 @@ public class game {
      * @return boolean
      * @param 
      */
-    public static boolean isUserRegisterd(String email, String file, boolean DEBUG, String password){
+    private static boolean isUserRegisterd(String email, String file, boolean DEBUG, String password){
 
         //New BufferdReader
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
@@ -272,7 +272,7 @@ public class game {
      * @return int
      * @param 
      */
-    public static int scoreDice(boolean DEBUG) {
+    private static int scoreDice(boolean DEBUG) {
         String diceRoll = diceRoll(DEBUG); //Rolls dice
         String[] roll = diceRoll.split("[|]"); //Split resulting diceroll string.
         //Parse each string to int
@@ -296,7 +296,7 @@ public class game {
      * @return void
      * @param 
      */
-    public static void editBankRoll(String file, String email, int newbBankRollAmount, boolean DEBUG, String password) {
+    private static void editBankRoll(String file, String email, int newbBankRollAmount, boolean DEBUG, String password) {
         List<String> lines = new ArrayList<>(); // Create a list to store lines from the file input
         boolean lineReplaced = false;
     
@@ -364,7 +364,7 @@ public class game {
      * @return String
      * @param 
      */
-    public static String evaluateDice(int diceScore, int bet, boolean DEBUG){
+    private static String evaluateDice(int diceScore, int bet, boolean DEBUG){
         if(diceScore == 7 || diceScore == 11){ //Checks if total is either 7 or 11 and returns status code
             if (DEBUG) {
                 System.out.printf("DEBUG User won first roll. Bet %s added to bankroll\n", bet);
@@ -390,7 +390,7 @@ public class game {
      * @return boolean
      * @param 
      */
-    public static boolean regUserIf(Scanner scnr, boolean DEBUG, String file, int startinggBankRoll, String password) {
+    private static boolean regUserIf(Scanner scnr, boolean DEBUG, String file, int startinggBankRoll, String password) {
         String username;
         String email;
 
@@ -431,7 +431,7 @@ public class game {
      * @return void
      * @param 
      */
-    public static int rollPoint(int point, int bet, Scanner scanner, String file, String email, int bank, boolean DEBUG, String password){
+    private static int rollPoint(int point, int bet, Scanner scanner, String file, String email, int bank, boolean DEBUG, String password){
         boolean fail = false;
 
         while(!fail){
@@ -465,7 +465,7 @@ public class game {
      * @return boolean
      * @param 
      */
-    public static boolean validateInt(String input, boolean DEBUG) {
+    private static boolean validateInt(String input, boolean DEBUG) {
         try{
 
             Integer.valueOf(input); //Tries to convert the string value to an int. If unable to (due to invalid user input), 
@@ -487,7 +487,7 @@ public class game {
      * @return String
      * @param 
      */
-    public static String logginIf(Scanner scanner, String file, boolean DEBUG, String password){ //Dose not check for valid username and email for security.
+    private static String logginIf(Scanner scanner, String file, boolean DEBUG, String password){ //Dose not check for valid username and email for security.
         System.out.println("Please input your registerd username: ");
         String username = scanner.nextLine().toString();
         System.out.println("Please input your email: ");
@@ -537,7 +537,7 @@ public class game {
      * @return void
      * @param 
      */
-    public static void play_game(String bankRoll, Scanner scanner, String file, String email, boolean DEBUG, String password){
+    private static void play_game(String bankRoll, Scanner scanner, String file, String email, boolean DEBUG, String password){
         String choice = "";
         int bank = Integer.parseInt(bankRoll);
         int bet = 0;
@@ -632,7 +632,7 @@ public class game {
      * @return void
      * @param 
      */
-    public static void checkForSaveFile(String file, boolean DEBUG) {
+    private static void checkForSaveFile(String file, boolean DEBUG) {
         File fileCheck = new File(file);
         if(!fileCheck.exists()){ //Checks if file exists.
             try(FileWriter writer = new FileWriter(fileCheck)){
@@ -654,7 +654,7 @@ public class game {
      * @return void
      * @param 
      */
-    public static void start(Scanner scnr, String name, boolean DEBUG, String file, int startinggBankRoll, String password) {
+    private static void start(Scanner scnr, String name, boolean DEBUG, String file, int startinggBankRoll, String password) {
 
         boolean authorized = false;
         String choice = "";
@@ -796,6 +796,14 @@ public class game {
                 break;
             }
         }
+
+    private static String getPassword() {
+        try{
+            return System.getenv("GAME_PASSWORD");
+        } catch(Exception e){
+            return "CS1085-2025";
+        }
+    }
     
         /**
      * Main starting method. Ran first.
@@ -813,7 +821,7 @@ public class game {
         boolean DEBUG = false; //DEBUG
         int STARTBR = 500; //Default bankroll allocated to user on registration
         String NAME = "Fra3zz"; //Authors name
-        String PASSWORD = "CS1085-2025";
+        String PASSWORD = getPassword();
 
         //-----------Utils------------
         Scanner scnr = new Scanner(System.in);
