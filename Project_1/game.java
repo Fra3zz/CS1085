@@ -255,10 +255,9 @@ public class game {
                 //Just checks email hashes aginst save file.
                 if(line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG, password))){
                     return true;
-                } else {
-                    return false;
                 }
             }
+            return false;
         } catch (IOException e){
             System.err.printf("\nERROR: %s",e);
         }
