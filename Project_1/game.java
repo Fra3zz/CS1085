@@ -14,7 +14,7 @@ import java.util.List;
 
 final class game {
 
-    private static String USERHOME = System.getProperty("user.home");
+    private static String USERHOME = System.getProperty("user.home");//Gets users home directory.
 
     /**
      * Method that writes lines to a file based upon string input and file path
