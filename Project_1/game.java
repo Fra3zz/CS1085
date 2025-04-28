@@ -29,7 +29,7 @@ public class game {
                 System.out.printf("DEBUG Line was writen to file '%s' with content '%s'.", filePath, content); //DEBUG
             }
         } catch(IOException e) {
-            System.err.printf("ERROR: %s", e.getMessage()); //Exception
+            System.err.printf("ERROR: %s", e.getMessage()); //Exception error
         }
     }
         
@@ -43,11 +43,13 @@ public class game {
      */
     public static boolean validateEmail(String email, boolean DEBUG) {
         boolean no_invalid_chars = true;
-        String[] invalidChars = {"[", "]", "\"", "\\", ":", ";", ",", "<", ">", "(", ")", "/", " "}; //Array of characters that are not permitted in email.
+        //Array of characters that are not permitted in email.
+        String[] invalidChars = {"[", "]", "\"", "\\", ":", ";", ",", "<", ">", "(", ")", "/", " "}; 
         boolean validStartChar;
         boolean validEndChar;
 
-        if(email.isBlank() || email.isEmpty() || email.strip().length() < email.length()){ //Checks if the email input is empty, blank, or has any spaces that should not be in the email.
+        //Checks if the email input is empty, blank, or has any spaces that should not be in the email.
+        if(email.isBlank() || email.isEmpty() || email.strip().length() < email.length()){
             return false;
         }
   
@@ -62,7 +64,9 @@ public class game {
         if(no_invalid_chars && email.contains("@") && email.contains(".") && !email.isEmpty() && validStartChar && validEndChar){ //Varifies if all of the email validation criteria is valid.
             String split_regex = "[@]"; //Regex for spliting at "@" symbol.
             String[] first_email_fragments = email.toLowerCase().trim().split(split_regex);
+            //Evaluates if their is only two parts of the email split at "@" and that no parts is blank (Ex: "johndoe@"")
             if(first_email_fragments.length == 2 && !first_email_fragments[0].isBlank() && !first_email_fragments[1].isBlank()){
+                //Checks to see if any part of the email begins/ends with "." indicating an invalid email.
                 if(first_email_fragments[0].startsWith(".") || first_email_fragments[0].endsWith(".") || first_email_fragments[1].startsWith(".") || first_email_fragments[0].endsWith(".")){ //Checks if either the first of last portion of the email contains ".", returning the email as invalid.
                     if(DEBUG){ //DEBUG
                         System.out.printf("DEBUG First part of email: '%s'\nDEBUG Second part of email: '%s'\n", first_email_fragments[0], first_email_fragments[1]);
@@ -96,7 +100,7 @@ public class game {
      * @throws IOException
      */
     public static boolean validateUsername(String username, boolean DEBUG) {
-        return username.matches("[A-Za-z]+"); //Checks if username has one or more characters in A-Z and a-z.
+        return username.matches("[A-Za-z]+"); //Checks if username has one or more characters in A-Z and a-z exlusive.
     }
 
     /**
@@ -109,8 +113,9 @@ public class game {
      */
     private static byte[] SHA_256(String data){
         try{
-            MessageDigest digest = MessageDigest.getInstance("SHA-256"); //Mkaes MessageDigest object, setting SHA-256 as the provider.
-            return digest.digest(data.getBytes()); //Makes byte SHA-256 hash 
+            //Makes MessageDigest object, setting SHA-256 as the hash/encryption provider.
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            return digest.digest(data.getBytes()); //Makes byte SHA-256 hash from byte input
         } catch(NoSuchAlgorithmException e){
             throw new RuntimeException("ERROR: " + e); //If any errors, returns an error.
 
@@ -127,7 +132,8 @@ public class game {
     public static String SHA_256_B64(String message, boolean DEBUG){
         String data_encoded;
 
-            data_encoded = Base64.getEncoder().encodeToString(SHA_256(message)); //Gets SHA-256 bytes and base64 encodes them, asigning them to data_encoded.
+            //Gets SHA-256 bytes and base64 encodes them, asigning them to data_encoded.
+            data_encoded = Base64.getEncoder().encodeToString(SHA_256(message));
             if(DEBUG){
                 System.out.printf("DEBUG Message base64: %s\n", data_encoded);
             }
@@ -145,6 +151,7 @@ public class game {
     public static String userAuth(String username, String email, String file, boolean DEBUG){
         //0 - Error; 1 - User validated; 2 - User info invalid; 3 - User not found; 4 - Users bank empty
 
+        //Nuw BufferedReader object
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while((line = reader.readLine()) != null){
@@ -153,13 +160,16 @@ public class game {
                     System.out.printf("DEBUG %s\n", line); //DEBUG only output
                 }
 
+                //Splits each users info at "|" and checks the email hash with user input hashed
                 if(line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG))){
 
                     if(DEBUG){
                         System.out.println("DEBUG Email found");
                     }
+                    //Splits each users info at "|" and checks the username hash with user input hashed
                     if(line.split("[|]")[1].equals(SHA_256_B64(username, DEBUG))){
 
+                        //Checks if users bank balance is 0 and returns associated status code
                         if(line.split("[|]")[2].equals("0")){
                             return "4|EMPTY_BANK";
                         }
@@ -195,12 +205,12 @@ public class game {
     public static boolean addUser(String username, String email, String file, boolean DEBUG, int bankRoll){
         if(validateEmail(email, DEBUG)){
             //Constructs the payload as "email hash|username hash|bankroll"
-            String payload = "" + SHA_256_B64(email, DEBUG) + "|" + SHA_256_B64(username, DEBUG) + "|" + bankRoll; //Makes string to add to save file.
+            String payload = "" + SHA_256_B64(email, DEBUG) + "|" + SHA_256_B64(username, DEBUG) + "|" + bankRoll; 
             writeLineToFile(payload, file, DEBUG); //Write line to file.
             return true;
         } else{
             if(DEBUG){
-                System.err.println("ERROR: Invalid email");
+                System.err.println("ERROR: Invalid email"); //DEBUG
             }
             return false;
         }
@@ -214,22 +224,25 @@ public class game {
      * @param 
      */
     public static String diceRoll(boolean DEBUG) {
-        Random rand = new Random();
+        Random rand = new Random(); //New random object
+        //Concatinates two random numbers seperated by "|" and returns string
         String number = "" + (rand.nextInt(6) + 1) + "|" + (rand.nextInt(6) + 1);
-        if(DEBUG){
+        if(DEBUG){ //DEBUG
             System.out.printf("DEBUG Number generated is %s.\n",number);
         }
         return(number);
     }
 
     /**
-     * Checks if a user is registerd by comparing email hashes. Quick method for checking if a user is already registerd. 
+     * Checks if a user is registerd by comparing email hashes. Quicker method for checking if a user is in the save file.
      * @author Fra3zz
      * @version 1.0.0
      * @return boolean
      * @param 
      */
     public static boolean isUserRegisterd(String email, String file, boolean DEBUG){
+
+        //New BufferdReader
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while((line = reader.readLine()) != null){
@@ -238,6 +251,7 @@ public class game {
                     System.out.printf("DEBUG %s\n", line); //DEBUG only output
                 }
 
+                //Just checks email hashes aginst save file.
                 if(line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG))){
                     return true;
                 } else {
@@ -260,9 +274,11 @@ public class game {
      */
     public static int scoreDice(boolean DEBUG) {
         String diceRoll = diceRoll(DEBUG); //Rolls dice
-        String[] roll = diceRoll.split("[|]");
+        String[] roll = diceRoll.split("[|]"); //Split resulting diceroll string.
+        //Parse each string to int
         int num1 = Integer.parseInt(roll[0]);
         int num2 = Integer.parseInt(roll[1]);
+        //Sum and print results for user
         int total = num1 + num2;
         printDice(num1, DEBUG);
         printDice(num2, DEBUG);
@@ -281,26 +297,34 @@ public class game {
      * @param 
      */
     public static void editBankRoll(String file, String email, int newbBankRollAmount, boolean DEBUG) {
-        List<String> lines = new ArrayList<>(); //Makes a new List of strings type.
+        List<String> lines = new ArrayList<>(); // Create a list to store lines from the file input
         boolean lineReplaced = false;
-
+    
+        // Try-with-resources to ensure the reader is closed after use
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
+            // Read the file line by line
             while ((line = reader.readLine()) != null) {
+                // If DEBUG true, print DEBUG
                 if (DEBUG) {
-                    System.out.printf("DEBUG %s\n", line); // DEBUG only output
+                    System.out.printf("DEBUG %s\n", line);
                 }
-
-                if (line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG))) { //Checks if the users email is the same as the user input email SHA256 base 64 encoded
+    
+                // Split the line using '|' as the delimiter and check if the first part matches the email SHA-256 hash
+                if (line.split("[|]")[0].equals(SHA_256_B64(email, DEBUG))) {
                     String[] user = line.split("[|]");
-                    String payload = user[0] + "|" + user[1] + "|" + newbBankRollAmount; //Creates new formated string.
-                    lines.add(payload); //Replaces line with payload new paylaod
+                    // Create a new line with the updated bankroll amount
+                    String payload = user[0] + "|" + user[1] + "|" + newbBankRollAmount;
+                    // Add the new line to the list
+                    lines.add(payload);
                     lineReplaced = true;
-
+    
+                    // If DEBUG is true, print DEBUG
                     if (DEBUG) {
                         System.out.printf("DEBUG Line will be replaced with '%s'.\n", payload);
                     }
-                } else { //If the email SHA256 dose not equial the user email, replace with original string
+                } else {
+                    // If email SHA-256 dose not match, add the original line to the list
                     lines.add(line);
                 }
             }
@@ -308,23 +332,28 @@ public class game {
             System.err.printf("\nERROR: %s", e);
             return;
         }
-
+    
+        // If line was replaced, write new line to file
         if (lineReplaced) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-                for (String l : lines) { 
-                    writer.write(l); //Writes replaced/oringinal line to file.
-                    writer.newLine();//Adds new line to file
+                // Iterate each line and write each line to file
+                for (String l : lines) {
+                    writer.write(l);
+                    writer.newLine(); // Add a newline after each line
                 }
                 if (DEBUG) {
                     System.out.printf("DEBUG File '%s' has been updated.\n", file);
                 }
             } catch (IOException e) {
+                // Error print
                 System.err.printf("ERROR: %s", e.getMessage());
             }
         } else if (DEBUG) {
+            // DEBUG
             System.out.printf("DEBUG No matching line found for email '%s'.\n", email);
         }
     }
+    
 
 
     /**
@@ -336,12 +365,12 @@ public class game {
      * @param 
      */
     public static String evaluateDice(int diceScore, int bet, boolean DEBUG){
-        if(diceScore == 7 || diceScore == 11){
+        if(diceScore == 7 || diceScore == 11){ //Checks if total is either 7 or 11 and returns status code
             if (DEBUG) {
                 System.out.printf("DEBUG User won first roll. Bet %s added to bankroll\n", bet);
             }
             return "GOOD_END"; //Game ends with bet added to bankroll.
-        } else if(diceScore == 2 || diceScore == 3 || diceScore == 12){
+        } else if(diceScore == 2 || diceScore == 3 || diceScore == 12){ //Checks if total is 2,3, or 12 and returns status code
             if (DEBUG) {
                 System.out.printf("DEBUG User lost first roll, %s deducted from bankroll\n", bet);
             }
@@ -383,10 +412,12 @@ public class game {
 
         if(isUserRegisterd(email, file, DEBUG)){ //Check if the users's email is already registerd.
             System.out.println("User is already registerd, please loggin.");
+            //Reset username and email
             username = null;
             email = null;
             return false;
         } else {
+            //Add user to file input
             addUser(username, email, file, DEBUG, startinggBankRoll);
             return true;
         }
@@ -405,21 +436,22 @@ public class game {
 
         while(!fail){
             System.out.println("Roll the dice? (ENTER): \n");
-            scanner.nextLine().toString();
+            scanner.nextLine().toString(); //Dose not save input, just for user experiance
 
-            int roll = scoreDice(DEBUG);
+            int roll = scoreDice(DEBUG); //Scores dice
 
             if(roll == point){
-                editBankRoll(file, email, bank + bet, DEBUG);
-                bank += bet;
+                editBankRoll(file, email, bank + bet, DEBUG); //Updated bankroll
+                bank += bet; //Adds bet to bankroll
                 System.out.printf("You hit point :)\n  %s added to your bank.\nBank: %s \n", bet, bank);
             } else if(roll == 7){
-                editBankRoll(file, email, bank - bet, DEBUG);
-                bank = bank - bet;
+                editBankRoll(file, email, bank - bet, DEBUG);  //Updated bankroll
+                bank = bank - bet; //Subtracts bet from bankroll
                 fail = true;
                 System.out.printf("You hit 7 :(\n %s removed from your bank.\nBank: %s\n", bet, bank);
                 return bank;
             } else {
+                //Returns user to loop
                 System.out.printf("You did not hit %s(point) or 7. Keep em' rolling!\n", point);
             }
         }
@@ -469,6 +501,7 @@ public class game {
             System.out.println("Invalid username or email. \nPlease enter your username or return to the main menu(0): ");
             username = scanner.nextLine().toString();
 
+            //Cheks of the users input was to return to menu
             if(username.equals("0")){
                 return "MENU";
             }
@@ -477,13 +510,16 @@ public class game {
             System.out.println("Please input your email or return to the main menu(0): ");
             email = scanner.nextLine().toString().toLowerCase();
 
+            //Return to menu
             if(email.equals("0")){
                 return "MENU";
             }
 
+            //Authorizes user
             authorization = userAuth(username, email, file, DEBUG);
         }
 
+        //Evaluates users bank for 0.
         if(authorization.split("[|]")[0].equals("4")){
             return "4|EMPTY_BANK";
         }
@@ -514,15 +550,16 @@ public class game {
 
             choice = scanner.nextLine().toString();
 
+            //Evaluates user choice 
             if(choice.equals("1")){
                 boolean valid = false;
                 System.out.println("How much do you want to bet?: ");
                 while(!valid){
                     userInput = scanner.nextLine().toString();
 
-                    if(validateInt(userInput, DEBUG)){
+                    if(validateInt(userInput, DEBUG)){ //Checks if the user input is a valid int
                         bet = Integer.parseInt(userInput);
-                        if(bet <= bank && bet > 0){
+                        if(bet <= bank && bet > 0){ //Checks if bet is greater than users bank
                             valid = true;  
                         } else {
                             System.out.printf("Oops! You placed a bigger bet than your bankroll or you didnt input an intiger.\nYour current bankroll is $%s.\nPlease input your bet: ", bank);
@@ -533,11 +570,13 @@ public class game {
                 }
 
                 String userChoice = "";
-                while(!userChoice.equals("y") && !userChoice.equals("n")){
+                //Validates bet with user
+                while(!userChoice.equals("y") && !userChoice.equals("n")){ 
                     System.out.println("Roll the dice? (y)es / (n)o \n");
                     userChoice = scanner.nextLine().toString();
                 }
 
+                //Places user in loop until they confirm their new bet after each modification they make
                 while(userChoice.equals("n")){
                     valid = false;
                     while(!valid){
@@ -570,7 +609,7 @@ public class game {
                     System.out.printf("YOU WIN\n%s added to bank for a total of %s\n", bet, bank + bet);
                     bank = bank + bet;
                     bet = 0;
-                } else if (evaluateDice(rollInt, bet, DEBUG).equals("BAD_END")){
+                } else if (evaluateDice(rollInt, bet, DEBUG).equals("BAD_END")){ 
                     editBankRoll(file, email, bank - bet, DEBUG); //Removes bet amount from bank.
                     System.out.printf("YOU LOST\n%s removed from your bank for a total of %s\n", bet, bank - bet);
                     bank = bank - bet;
@@ -600,7 +639,7 @@ public class game {
                 if(DEBUG){
                     System.out.println("Making file."); //DEBUG
                 }
-                writer.write("");
+                writer.write(""); //Writes nothing, creating save file
             } catch (Exception e){
                 System.err.println("ERROR: " + e);
             }
@@ -632,6 +671,7 @@ public class game {
 
             choice  = scnr.nextLine().toString();
 
+            //Keeps users in loop until valid input is inputted by user
             while(!choice.equals("1") && !choice.equals("2") && !choice.equals("3")){
                 System.out.println("Invalid choice. Please pick fom the menu.");
                 System.out.println("1 - Login");
@@ -647,6 +687,7 @@ public class game {
                     String authorizedAndBankroll = logginIf(scnr, file, DEBUG);
 
                     if(!authorizedAndBankroll.equals("MENU") && !authorizedAndBankroll.equals("4|EMPTY_BANK")){
+                        //Play game with varified users bankroll and creds
                         play_game(authorizedAndBankroll.split("[|]")[0], scnr, file, authorizedAndBankroll.split("[|]")[1], DEBUG);
                     } else if(authorizedAndBankroll.equals("4|EMPTY_BANK")){
                         System.out.println("Sorry but you do not have any money. Come back when you got some!");
@@ -655,7 +696,7 @@ public class game {
 
                 // Register = 2
                 if(choice.equals("2")){
-                    if(regUserIf(scnr, DEBUG, file, startinggBankRoll)){
+                    if(regUserIf(scnr, DEBUG, file, startinggBankRoll)){ //Takes user to registration interface
                         System.out.println("Thank you for registering. Please log-in..");
                     }
                 }
@@ -665,7 +706,7 @@ public class game {
 
                     // Good bye
                     System.out.println("Have a greate day and don't forget to cash out!!");
-                    return;
+                    return; //Exit
                 }
             } 
         }
