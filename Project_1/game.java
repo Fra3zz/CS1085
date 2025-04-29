@@ -1,9 +1,22 @@
 import java.util.Random;
 import java.util.Scanner;
+import java.security.Key;
+import java.security.KeyFactory;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import javax.crypto.Cipher;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
+import java.security.spec.EncodedKeySpec;
+import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -15,6 +28,159 @@ import java.util.List;
 final class game {
 
     private static String USERHOME = System.getProperty("user.home");//Gets users home directory.
+    private static Key PUB;
+    private static Key PRIV;
+    
+    /**
+     * Makes RSA public and private key pairs, writing them to "priv.key" and "pub.key"
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     * @throws Exception
+     */
+   private static void makeKeys() {
+      try {
+          KeyPairGenerator kg = KeyPairGenerator.getInstance("RSA");
+          kg.initialize(2048);
+          KeyPair keyPair = kg.genKeyPair(); //Generates private and public key pair of 2048 bytes
+          PrivateKey privKey = keyPair.getPrivate(); //Grabs private key from keyPair
+          PublicKey pubKey = keyPair.getPublic();
+
+          try (FileOutputStream fileOutputStream = new FileOutputStream("priv.key")) {
+            fileOutputStream.write(privKey.getEncoded()); //Opens steam and writes private key native encoding #PKS8
+            } catch(Exception e){
+                
+            }
+        try (FileOutputStream fileOutputStream = new FileOutputStream("pub.key")) {
+            fileOutputStream.write(pubKey.getEncoded()); //Opens steam and writes public key native encoding #PKS8
+            } catch(Exception e){ //ERROR
+                
+            }
+      } catch (NoSuchAlgorithmException e) {
+          System.err.println(e); //Print error
+      }
+  }
+
+  /**
+     * Checks if both "priv.key" and "pub.key" file are present, creating them if not.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     * @throws Exception
+     */
+  private static void checkForKeys(boolean DEBUG){
+    try{
+        File publicKeyFile = new File("./pub.key"); //Laods "pub.key" file
+        Files.readAllBytes(publicKeyFile.toPath()); //Reads file bytes for key
+
+        File privKeyFile = new File("./priv.key"); //Laods "prive.key" file
+        Files.readAllBytes(privKeyFile.toPath()); //Reads file bytes for key
+        if (DEBUG) {
+            System.out.println("Keys found!");
+        }
+    } catch(Exception e){
+        if (DEBUG) {
+            System.out.println("Making keys...");
+        }
+        makeKeys();
+    }
+  }
+
+  /**
+     * Sets the PRIV and PUB global variables from files.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     * @throws Exception
+     */
+  private static void setKeys(boolean DEBUG){
+    try{
+        File publicKeyFile = new File("./pub.key"); //Laods "pub.key" file
+        byte[] publicKeyBytes = Files.readAllBytes(publicKeyFile.toPath()); //Reads file bytes for key
+        EncodedKeySpec pubKey = new X509EncodedKeySpec(publicKeyBytes); //New X509 Key spec
+        
+        KeyFactory kf = KeyFactory.getInstance("RSA"); //RSA key format
+        PUB  = kf.generatePublic(pubKey); //Make public key from bytes follwoing RSA specifications
+
+    } catch(Exception e) {
+        System.err.println(e);
+    }
+    try{
+        File privKeyFile = new File("./priv.key"); //Laods "prive.key" file
+        byte[] privKeyBytes = Files.readAllBytes(privKeyFile.toPath()); //Reads file bytes for key
+        EncodedKeySpec privKey = new PKCS8EncodedKeySpec(privKeyBytes);
+        
+        KeyFactory kf2 = KeyFactory.getInstance("RSA");
+        PRIV  = kf2.generatePrivate(privKey);
+
+    } catch(Exception e) {
+        if(DEBUG){
+            System.err.println(e);
+        }
+    }
+  }
+
+  /**
+     * Encrypts string passed as input, returning Base64 encoded encrypted bytes.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return String
+     * @param 
+     * @throws Exception
+     */
+  public static String encrypt(String message, boolean DEBUG){
+    try{
+        Cipher cipher = Cipher.getInstance("RSA"); //Make AES encryption provider
+        cipher.init(Cipher.ENCRYPT_MODE, PUB); //Initialize encryption object wth encryption and public key
+
+        byte[] byteEncodedMessage = message.getBytes(StandardCharsets.UTF_8); //Encode mesasge into UTF-8 bytes
+        return Base64.getEncoder().encodeToString(cipher.doFinal(byteEncodedMessage)); //Encrypt and encode bytes into Base64 string
+    }catch(Exception e){
+        if(DEBUG){
+            System.err.println(e); //Print error
+        }
+        return ""; //Return nothing
+    }
+  }
+
+  /**
+     * Decyptes base64 encoded string input into bytes, decrypts bytes, and returns readable string.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return String
+     * @param 
+     * @throws Exception
+     */
+  public static String decrypt(String message, boolean DEBUG){
+    try{
+        Cipher cipher = Cipher.getInstance("RSA");  //RSA cipher
+        cipher.init(Cipher.DECRYPT_MODE, PRIV); //Prepare decryption with decryption mode and private RSA key
+        byte[] encodedMessage = Base64.getDecoder().decode(message); //Decode base64 message to bytes
+        byte[] byteEncodedMessage = cipher.doFinal(encodedMessage); //Decrypt bytes 
+        String decryptedMessage = new String(byteEncodedMessage, StandardCharsets.UTF_8); //Encode bytes to readable UTF-8 encoding
+        return decryptedMessage; 
+    }catch(Exception e){
+        if(DEBUG){
+            System.err.println(e); //Print error
+        }
+        return ""; //Return nothing
+    }
+  }
+
+  /**
+     * Checks for files and sets keys.
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return void
+     * @param 
+     */
+  private static void startEnc(boolean DEBUG){
+    checkForKeys(DEBUG);
+    setKeys(DEBUG);
+  }
 
     /**
      * Method that writes lines to a file based upon string input and file path
@@ -109,7 +275,7 @@ final class game {
      * Makes SHA_256 hash of the message input, returning a byte array.
      * @author Fra3zz
      * @version 1.0.0
-     * @return byte array
+     * @return byte[]
      * @param 
      * @throws NoSuchAlgorithmException
      */
@@ -159,6 +325,8 @@ final class game {
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while((line = reader.readLine()) != null){
+
+                line = decrypt(line, DEBUG);
 
                 if(DEBUG){
                     System.out.printf("DEBUG %s\n", line); //DEBUG only output
@@ -210,7 +378,7 @@ final class game {
         if(validateEmail(email, DEBUG)){
             //Constructs the payload as "email hash|username hash|bankroll"
             String payload = "" + SHA_256_B64(email, DEBUG, password) + "|" + SHA_256_B64(username, DEBUG, password) + "|" + bankRoll; 
-            writeLineToFile(payload, file, DEBUG); //Write line to file.
+            writeLineToFile(encrypt(payload, DEBUG), file, DEBUG); //Write line to file.
             return true;
         } else{
             if(DEBUG){
@@ -250,7 +418,7 @@ final class game {
         try(BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
             while((line = reader.readLine()) != null){
-
+                line = decrypt(line, DEBUG);
                 if(DEBUG){
                     System.out.printf("DEBUG %s\n", line); //DEBUG only output
                 }
@@ -309,6 +477,8 @@ final class game {
             // Read the file line by line
             while ((line = reader.readLine()) != null) {
                 // If DEBUG true, print DEBUG
+                String orgLine = line;
+                line = decrypt(line, DEBUG);
                 if (DEBUG) {
                     System.out.printf("DEBUG %s\n", line);
                 }
@@ -319,7 +489,7 @@ final class game {
                     // Create a new line with the updated bankroll amount
                     String payload = user[0] + "|" + user[1] + "|" + newbBankRollAmount;
                     // Add the new line to the list
-                    lines.add(payload);
+                    lines.add(encrypt(payload, DEBUG));
                     lineReplaced = true;
     
                     // If DEBUG is true, print DEBUG
@@ -328,7 +498,7 @@ final class game {
                     }
                 } else {
                     // If email SHA-256 dose not match, add the original line to the list
-                    lines.add(line);
+                    lines.add(orgLine);
                 }
             }
         } catch (IOException e) {
@@ -356,8 +526,6 @@ final class game {
             System.out.printf("DEBUG No matching line found for email '%s'.\n", email);
         }
     }
-    
-
 
     /**
      * Evaluates the "first roll" from the dice roll sum input. Reduces and increases bankroll based upon win/lose criteria. Can return "GOOD_END",
@@ -414,7 +582,7 @@ final class game {
         }
 
         if(isUserRegisterd(email, file, DEBUG, password)){ //Check if the users's email is already registerd.
-            System.out.println("User is already registerd, please loggin.");
+            System.out.println("Email already in use.");
             //Reset username and email
             username = null;
             email = null;
@@ -431,7 +599,7 @@ final class game {
      * Main logic for rolling point. Takes in point socre, bet amount, scanner object, file path, email, bank amount, and debug, returning the user to the table menu if failed or player quits.
      * @author Fra3zz
      * @version 1.0.0
-     * @return void
+     * @return int
      * @param 
      */
     private static int rollPoint(int point, int bet, Scanner scanner, String file, String email, int bank, boolean DEBUG, String password){
@@ -662,6 +830,7 @@ final class game {
         boolean authorized = false;
         String choice = "";
 
+        startEnc(DEBUG);
         checkForSaveFile(file, DEBUG);
 
         while (!authorized && !choice.equals("3")){
@@ -799,7 +968,14 @@ final class game {
                 break;
             }
         }
-
+    
+       /**
+     * Returns a password string
+     * @author Fra3zz
+     * @version 1.0.0
+     * @return String
+     * @param 
+     */
     private static String getPassword() {
         try{
             return System.getenv("SECURE_PASSWORD");
@@ -807,7 +983,7 @@ final class game {
             return "CS1085-2025";
         }
     }
-    
+
         /**
      * Main starting method. Ran first.
      * @author Fra3zz
@@ -820,7 +996,7 @@ final class game {
         //-----------CONSTANTS------------
     
         //Settings
-        String SAVEPATH = USERHOME + "./saves.txt"; //File path
+        String SAVEPATH = "./saves.txt"; //File path
         boolean DEBUG = false; //DEBUG
         int STARTBR = 500; //Default bankroll allocated to user on registration
         String NAME = "Fra3zz"; //Authors name
