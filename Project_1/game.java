@@ -106,7 +106,7 @@ final class game {
         PUB  = kf.generatePublic(pubKey); //Make public key from bytes follwoing RSA specifications
 
     } catch(Exception e) {
-        System.err.println(e);
+        System.err.printf("DEBUG %s", e); //Print error
     }
     try{
         File privKeyFile = new File("./priv.key"); //Laods "prive.key" file
@@ -118,7 +118,7 @@ final class game {
 
     } catch(Exception e) {
         if(DEBUG){
-            System.err.println(e);
+            System.err.printf("DEBUG %s", e); //Print error
         }
     }
   }
@@ -137,10 +137,13 @@ final class game {
         cipher.init(Cipher.ENCRYPT_MODE, PUB); //Initialize encryption object wth encryption and public key
 
         byte[] byteEncodedMessage = message.getBytes(StandardCharsets.UTF_8); //Encode mesasge into UTF-8 bytes
+        if(DEBUG){
+            System.out.println("Message encrypted");
+        }
         return Base64.getEncoder().encodeToString(cipher.doFinal(byteEncodedMessage)); //Encrypt and encode bytes into Base64 string
     }catch(Exception e){
         if(DEBUG){
-            System.err.println(e); //Print error
+            System.err.printf("DEBUG %s", e); //Print error
         }
         return ""; //Return nothing
     }
@@ -161,10 +164,14 @@ final class game {
         byte[] encodedMessage = Base64.getDecoder().decode(message); //Decode base64 message to bytes
         byte[] byteEncodedMessage = cipher.doFinal(encodedMessage); //Decrypt bytes 
         String decryptedMessage = new String(byteEncodedMessage, StandardCharsets.UTF_8); //Encode bytes to readable UTF-8 encoding
+
+        if(DEBUG){
+            System.out.printf("Message decrypted as %s\n", decryptedMessage);
+        }
         return decryptedMessage; 
     }catch(Exception e){
         if(DEBUG){
-            System.err.println(e); //Print error
+            System.err.printf("DEBUG %s", e); //Print error
         }
         return ""; //Return nothing
     }
